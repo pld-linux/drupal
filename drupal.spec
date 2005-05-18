@@ -1,7 +1,7 @@
 Summary:	Open source content management platform
 Name:		drupal
 Version:	4.6.0
-Release:	0.20
+Release:	0.21
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -70,8 +70,13 @@ cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
 
 cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
-cp -a includes modules scripts themes $RPM_BUILD_ROOT%{_appdir}
+cp -a includes modules scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
+
+cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
+# move .xtmpl out of htdocs
+(cd $RPM_BUILD_ROOT%{_appdir}/htdocs && tar cf - --remove-files themes/*/*.xtmpl) | tar -xf - -C $RPM_BUILD_ROOT%{_appdir}
+mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
 
