@@ -1,14 +1,26 @@
 Summary:	Open source content management platform
 Name:		drupal
 Version:	4.6.0
-Release:	0.2
+Release:	0.20
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
 # Source0-md5:	cba80c4f511284b09d6a0a2def5cb250
 Source1:	%{name}.conf
+Patch0:		%{name}-config.patch
+Patch1:		%{name}-includedir.patch
+Patch2:		%{name}-module-themedir.patch
+Patch3:		%{name}-emptypass.patch
+Patch4:		%{name}-themedir.patch
 URL:		http://drupal.org/
+BuildRequires:	rpmbuild(macros) >= 1.194
+BuildRequires:	sed >= 4.0
+Requires:	php >= 3:4.3.3
+Requires:	php-mysql
+#Requires:	php-pgsql
+#Requires:	php-xml
+#Requires:	apache(mod_rewrite)
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -40,20 +52,40 @@ and much more.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
-%build
+grep -rl 'include_once .includes/' . | xargs sed -i -e '
+	s,include_once \(.\)includes/,include_once \1%{_appdir}/includes/,g
+'
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_appdir}/htdocs,%{_sysconfdir}}
 
 cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
-cp -a themes misc $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
 
 cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
-cp -a includes modules scripts sites $RPM_BUILD_ROOT%{_appdir}
+cp -a includes modules scripts themes $RPM_BUILD_ROOT%{_appdir}
+cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
+
+%post
+%banner -e %{name} <<EOF
+If this is your first install of Drupal, you need to create drupal database:
+shell$ mysqladmin create drupal
+
+and import initial schema:
+shell$ zcat %{_docdir}/%{name}-%{version}/database/database.mysql.gz | mysql drupal
+
+(anyway, read INSTALL file from documentation).
+
+EOF
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -77,10 +109,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(750,root,http) %dir %{_sysconfdir}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache-%{name}.conf
 
+%attr(750,root,http) %dir %{_sysconfdir}/sites
+%attr(750,root,http) %dir %{_sysconfdir}/sites/default
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %dir %{_sysconfdir}/sites/default/*
+
 %dir %{_appdir}
 %{_appdir}/*.php
 %{_appdir}/htdocs
 %{_appdir}/includes
 %{_appdir}/modules
 %{_appdir}/scripts
-%{_appdir}/sites
+%{_appdir}/themes
