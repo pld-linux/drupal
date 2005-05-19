@@ -112,11 +112,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc *.txt database
 
 %attr(750,root,http) %dir %{_sysconfdir}
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache-%{name}.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache-%{name}.conf
 
 %attr(750,root,http) %dir %{_sysconfdir}/sites
 %attr(750,root,http) %dir %{_sysconfdir}/sites/default
-%config(noreplace) %verify(not md5 mtime size) %attr(640,root,http) %dir %{_sysconfdir}/sites/default/*
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sites/default/*
 
 %dir %{_appdir}
 %{_appdir}/*.php
