@@ -1,0 +1,11 @@
+--- ./includes/database.mysql.inc~	2005-04-14 21:50:23.000000000 +0300
++++ ./includes/database.mysql.inc	2005-05-18 18:48:24.970031862 +0300
+@@ -28,7 +28,7 @@
+      $url['host'] = $url['host'] .':'. $url['port'];
+   }
+ 
+-  $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE) or die(mysql_error());
++  $connection = mysql_connect($url['host'], $url['user'], @$url['pass'], TRUE) or die(mysql_error());
+   mysql_select_db(substr($url['path'], 1)) or die('unable to select database');
+ 
+   return $connection;

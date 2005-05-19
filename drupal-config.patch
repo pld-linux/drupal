@@ -1,0 +1,11 @@
+--- ./sites/default/settings.php~	2005-04-14 21:35:19.000000000 +0300
++++ ./sites/default/settings.php	2005-05-18 17:58:55.000000000 +0300
+@@ -78,7 +78,7 @@
+  * $db_url = 'mysql://username:password@localhost/database';
+  * $db_url = 'pgsql://username:password@localhost/database';
+  */
+-$db_url = 'mysql://username:password@localhost/database';
++$db_url = 'mysql://mysql:@localhost/drupal';
+ $db_prefix = '';
+ 
+ /**
