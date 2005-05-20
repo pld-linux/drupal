@@ -1,4 +1,5 @@
 Summary:	Open source content management platform
+Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.0
 Release:	0.33
@@ -27,9 +28,9 @@ Requires:	apache(mod_rewrite)
 Requires:	apache(mod_alias)
 Requires:	php >= 3:4.3.3
 Requires:	php-mysql
+Requires:	php-pcre
 #Requires:	php-pgsql
 Requires:	php-xml
-Requires:	php-pcre
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -59,25 +60,52 @@ Drupal includes features to enable
 
 and much more.
 
+%description -l pl
+Drupal to oprogramowanie pozwalaj±ce osobie lub spo³eczno¶ci
+u¿ytkowników na ³atwe publikowanie, zarz±dzanie i organizowanie ró¿nej
+tre¶ci na stronie WWW. Dziesi±tki tysiêcy ludzi i organizacji u¿ywali
+Drupala do ustawiania wyników ró¿nych rodzajów stron WWW, w tym:
+- portale WWW i strony dyskusyjne spo³eczno¶ci
+- korporacyjne strony WWW/portale intranetowe
+- osobiste strony WWW
+- strony mi³o¶ników
+- aplikacje e-commerce
+- s³owniki zasobów
+
+Drupal zawiera zasoby umo¿liwiaj±ce tworzenie:
+- systemów zarz±dzania tre¶ci±
+- blogów
+- ¶rodowisk pracy grupowej
+- forów
+- nowin
+- galerii zdjêæ
+- wrzucania i ¶ci±gania plików
+
+i wiele wiêcej.
+
 %package cron
-Summary:	drupal cron
+Summary:	Drupal cron
+Summary(pl):	Us³uga cron dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
 Requires:	php-cli >= 3:4.3.3
 
 %description cron
-This package contains script which invokes cron hooks for drupal.
+This package contains script which invokes cron hooks for Drupal.
+
+%description cron -l pl
+Ten pakiet zawiera skrypt wywo³uj±cy uchwyty crona dla Drupala.
 
 %prep
 %setup -q
-%patch0 -p1 -b config
-#%patch1 -p1 -b includedir
-#%patch2 -p1 -b module-themedir
-%patch3 -p1 -b emptypass
-%patch4 -p1 -b themedir
-%patch5 -p1 -b sitesdir
-%patch6 -p1 -b topdir
+%patch0 -p1
+#%patch1 -p1
+#%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 
 #grep -rl 'include_once .includes/' . | xargs sed -i -e '
 #	s,include_once \(.\)includes/,include_once \1%{_appdir}/includes/,g
@@ -104,6 +132,9 @@ mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post
 if [ "$1" = 1 ]; then
 %banner -e %{name} <<EOF
@@ -117,9 +148,6 @@ shell$ zcat %{_docdir}/%{name}-%{version}/database/database.mysql.gz | mysql dru
 
 EOF
 fi
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %triggerin -- apache1 >= 1.3.33-2
 %apache_config_install -v 1 -c %{_sysconfdir}/apache-%{name}.conf
