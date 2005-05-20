@@ -1,7 +1,7 @@
 Summary:	Open source content management platform
 Name:		drupal
 Version:	4.6.0
-Release:	0.21
+Release:	0.31
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -13,14 +13,21 @@ Patch1:		%{name}-includedir.patch
 Patch2:		%{name}-module-themedir.patch
 Patch3:		%{name}-emptypass.patch
 Patch4:		%{name}-themedir.patch
+Patch5:		%{name}-sitesdir.patch
+Patch6:		%{name}-topdir.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.194
 BuildRequires:	sed >= 4.0
+Requires:	apache >= 1.3.33-3
+Requires:	apache(mod_dir)
+Requires:	apache(mod_access)
+Requires:	apache(mod_expires)
+Requires:	apache(mod_rewrite)
+Requires:	apache(mod_alias)
 Requires:	php >= 3:4.3.3
 Requires:	php-mysql
 #Requires:	php-pgsql
 #Requires:	php-xml
-#Requires:	apache(mod_rewrite)
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -52,15 +59,19 @@ and much more.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+%patch0 -p1 -b config
+#%patch1 -p1 -b includedir
+#%patch2 -p1 -b module-themedir
+%patch3 -p1 -b emptypass
+%patch4 -p1 -b themedir
+%patch5 -p1 -b sitesdir
+%patch6 -p1 -b topdir
 
-grep -rl 'include_once .includes/' . | xargs sed -i -e '
-	s,include_once \(.\)includes/,include_once \1%{_appdir}/includes/,g
-'
+#grep -rl 'include_once .includes/' . | xargs sed -i -e '
+#	s,include_once \(.\)includes/,include_once \1%{_appdir}/includes/,g
+#'
+
+find -name '*~' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -81,6 +92,7 @@ mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
 
 %post
+if [ "$1" = 1 ]; then
 %banner -e %{name} <<EOF
 If this is your first install of Drupal, you need to create drupal database:
 shell$ mysqladmin create drupal
@@ -91,6 +103,7 @@ shell$ zcat %{_docdir}/%{name}-%{version}/database/database.mysql.gz | mysql dru
 (anyway, read INSTALL file from documentation).
 
 EOF
+fi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
