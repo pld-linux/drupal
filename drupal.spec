@@ -1,13 +1,14 @@
 Summary:	Open source content management platform
 Name:		drupal
 Version:	4.6.0
-Release:	0.31
+Release:	0.32
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
 # Source0-md5:	cba80c4f511284b09d6a0a2def5cb250
 Source1:	%{name}.conf
+Source2:	%{name}.cron
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-includedir.patch
 Patch2:		%{name}-module-themedir.patch
@@ -57,6 +58,16 @@ Drupal includes features to enable
 
 and much more.
 
+%package cron
+Summary:	drupal cron
+Group:		Applications/WWW
+Requires:	%{name} = %{version}-%{release}
+Requires:	crondaemon
+Requires:	php-cli >= 3:4.3.3
+
+%description cron
+This package contains script which invokes cron hooks for drupal.
+
 %prep
 %setup -q
 %patch0 -p1 -b config
@@ -75,7 +86,7 @@ find -name '*~' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_appdir}/htdocs,%{_sysconfdir}}
+install -d $RPM_BUILD_ROOT{%{_appdir}/htdocs,%{_sysconfdir},/etc/cron.d}
 
 cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
@@ -90,6 +101,7 @@ cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
 mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
 %post
 if [ "$1" = 1 ]; then
@@ -132,9 +144,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sites/default/*
 
 %dir %{_appdir}
-%{_appdir}/*.php
 %{_appdir}/htdocs
 %{_appdir}/includes
 %{_appdir}/modules
 %{_appdir}/scripts
 %{_appdir}/themes
+
+%files cron
+%defattr(644,root,root,755)
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}
+%{_appdir}/cron.php
