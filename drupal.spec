@@ -1,7 +1,7 @@
 Summary:	Open source content management platform
 Name:		drupal
 Version:	4.6.0
-Release:	0.32
+Release:	0.33
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -28,7 +28,8 @@ Requires:	apache(mod_alias)
 Requires:	php >= 3:4.3.3
 Requires:	php-mysql
 #Requires:	php-pgsql
-#Requires:	php-xml
+Requires:	php-xml
+Requires:	php-pcre
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
