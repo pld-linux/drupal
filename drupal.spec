@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.2
-Release:	0.9
+Release:	0.14
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -152,16 +152,18 @@ find -name '*~' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_appdir}/{po,htdocs/files},%{_sysconfdir},/etc/cron.d}
+install -d $RPM_BUILD_ROOT{%{_appdir}/{po,modules/po,htdocs/{files,modules}},%{_sysconfdir},/etc/cron.d}
 
 cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
 
 cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
-cp -a includes modules scripts $RPM_BUILD_ROOT%{_appdir}
+cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
+cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
 
 cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
+ln -s htdocs/files $RPM_BUILD_ROOT%{_appdir}/files
 
 # move .xtmpl/.theme out of htdocs
 (cd $RPM_BUILD_ROOT%{_appdir}/htdocs && tar cf - --remove-files themes/*/*.{xtmpl,theme}) | tar -xf - -C $RPM_BUILD_ROOT%{_appdir}
@@ -217,11 +219,14 @@ fi
 %{_appdir}/scripts
 %{_appdir}/themes
 %{_appdir}/po
+# symlink
+%{_appdir}/files
 
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/*.*
 %{_appdir}/htdocs/misc
 %{_appdir}/htdocs/themes
+%{_appdir}/htdocs/modules
 %dir %attr(775,root,http) %{_appdir}/htdocs/files
 
 %files cron
