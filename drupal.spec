@@ -1,13 +1,13 @@
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
-Version:	4.6.0
-Release:	0.33
+Version:	4.6.2
+Release:	0.1
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	cba80c4f511284b09d6a0a2def5cb250
+# Source0-md5:	7bbee605d6b57052e27adb1a61685ec1
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Patch0:		%{name}-config.patch
@@ -17,6 +17,7 @@ Patch3:		%{name}-emptypass.patch
 Patch4:		%{name}-themedir.patch
 Patch5:		%{name}-sitesdir.patch
 Patch6:		%{name}-topdir.patch
+Patch7:		%{name}-themedir2.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.194
 BuildRequires:	sed >= 4.0
@@ -103,9 +104,10 @@ Ten pakiet zawiera skrypt wywo³uj±cy uchwyty crona dla Drupala.
 #%patch1 -p1
 #%patch2 -p1
 %patch3 -p1
-%patch4 -p1
+#%patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 #grep -rl 'include_once .includes/' . | xargs sed -i -e '
 #	s,include_once \(.\)includes/,include_once \1%{_appdir}/includes/,g
@@ -115,7 +117,7 @@ find -name '*~' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_appdir}/htdocs,%{_sysconfdir},/etc/cron.d}
+install -d $RPM_BUILD_ROOT{%{_appdir}/{htdocs,files},%{_sysconfdir},/etc/cron.d}
 
 cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
@@ -178,6 +180,8 @@ fi
 %{_appdir}/modules
 %{_appdir}/scripts
 %{_appdir}/themes
+
+%dir %attr(775,root,http) %{_appdir}/files
 
 %files cron
 %defattr(644,root,root,755)
