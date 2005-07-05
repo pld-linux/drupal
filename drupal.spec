@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.2
-Release:	0.1
+Release:	0.6
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -10,6 +10,8 @@ Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
 # Source0-md5:	7bbee605d6b57052e27adb1a61685ec1
 Source1:	%{name}.conf
 Source2:	%{name}.cron
+Source3:	http://www.drupal.org/misc/favicon.ico
+# Source3-md5:	f0ee98b4394dfdab17c16245dd799204
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-includedir.patch
 Patch2:		%{name}-module-themedir.patch
@@ -117,7 +119,7 @@ find -name '*~' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_appdir}/{htdocs,files},%{_sysconfdir},/etc/cron.d}
+install -d $RPM_BUILD_ROOT{%{_appdir}/htdocs/files,%{_sysconfdir},/etc/cron.d}
 
 cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
@@ -127,12 +129,14 @@ cp -a includes modules scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
 
 cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
-# move .xtmpl out of htdocs
-(cd $RPM_BUILD_ROOT%{_appdir}/htdocs && tar cf - --remove-files themes/*/*.xtmpl) | tar -xf - -C $RPM_BUILD_ROOT%{_appdir}
+
+# move .xtmpl/.theme out of htdocs
+(cd $RPM_BUILD_ROOT%{_appdir}/htdocs && tar cf - --remove-files themes/*/*.{xtmpl,theme}) | tar -xf - -C $RPM_BUILD_ROOT%{_appdir}
 mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
+install %{SOURCE3} $RPM_BUILD_ROOT%{_appdir}/htdocs
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -175,13 +179,16 @@ fi
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sites/default/*
 
 %dir %{_appdir}
-%{_appdir}/htdocs
 %{_appdir}/includes
 %{_appdir}/modules
 %{_appdir}/scripts
 %{_appdir}/themes
 
-%dir %attr(775,root,http) %{_appdir}/files
+%dir %{_appdir}/htdocs
+%{_appdir}/htdocs/*.*
+%{_appdir}/htdocs/misc
+%{_appdir}/htdocs/themes
+%dir %attr(775,root,http) %{_appdir}/htdocs/files
 
 %files cron
 %defattr(644,root,root,755)
