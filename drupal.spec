@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.2
-Release:	0.6
+Release:	0.7
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -34,6 +34,39 @@ Requires:	php-mysql
 Requires:	php-pcre
 #Requires:	php-pgsql
 Requires:	php-xml
+# rpm -ql drupal | awk -F/ '/\.module$/{gsub("\.module", ""); printf("Provides:\tdrupal-mod-%s\n", $NF)}' >> drupal.spec
+Provides:	drupal-mod-aggregator
+Provides:	drupal-mod-archive
+Provides:	drupal-mod-block
+Provides:	drupal-mod-blog
+Provides:	drupal-mod-blogapi
+Provides:	drupal-mod-book
+Provides:	drupal-mod-comment
+Provides:	drupal-mod-contact
+Provides:	drupal-mod-drupal
+Provides:	drupal-mod-filter
+Provides:	drupal-mod-forum
+Provides:	drupal-mod-help
+Provides:	drupal-mod-legacy
+Provides:	drupal-mod-locale
+Provides:	drupal-mod-menu
+Provides:	drupal-mod-node
+Provides:	drupal-mod-page
+Provides:	drupal-mod-path
+Provides:	drupal-mod-ping
+Provides:	drupal-mod-poll
+Provides:	drupal-mod-profile
+Provides:	drupal-mod-queue
+Provides:	drupal-mod-search
+Provides:	drupal-mod-statistics
+Provides:	drupal-mod-story
+Provides:	drupal-mod-system
+Provides:	drupal-mod-taxonomy
+Provides:	drupal-mod-throttle
+Provides:	drupal-mod-tracker
+Provides:	drupal-mod-upload
+Provides:	drupal-mod-user
+Provides:	drupal-mod-watchdog
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
