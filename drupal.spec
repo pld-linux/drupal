@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.2
-Release:	0.14
+Release:	0.16
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -133,6 +133,16 @@ This package contains script which invokes cron hooks for Drupal.
 %description cron -l pl
 Ten pakiet zawiera skrypt wywo³uj±cy uchwyty crona dla Drupala.
 
+%package xmlrpc
+Summary:	XMLRPC server for Drupal
+Group:		Applications/WWW
+Requires:	%{name} = %{version}-%{release}
+
+%description xmlrpc
+XMLRPC server for Drupal allows other Drupal's authorize with your
+Drupal's user creditentials, this is called Distributed Authentication
+in Drupal world.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -156,6 +166,7 @@ install -d $RPM_BUILD_ROOT{%{_appdir}/{po,modules/po,htdocs/{files,modules}},%{_
 
 cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 
 cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
 cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
@@ -223,7 +234,8 @@ fi
 %{_appdir}/files
 
 %dir %{_appdir}/htdocs
-%{_appdir}/htdocs/*.*
+%{_appdir}/htdocs/*.ico
+%{_appdir}/htdocs/index.php
 %{_appdir}/htdocs/misc
 %{_appdir}/htdocs/themes
 %{_appdir}/htdocs/modules
@@ -233,3 +245,7 @@ fi
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}
 %{_appdir}/cron.php
+
+%files xmlrpc
+%defattr(644,root,root,755)
+%{_appdir}/htdocs/xmlrpc.php
