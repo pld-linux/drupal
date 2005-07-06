@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.2
-Release:	0.16
+Release:	0.18
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -10,8 +10,6 @@ Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
 # Source0-md5:	7bbee605d6b57052e27adb1a61685ec1
 Source1:	%{name}.conf
 Source2:	%{name}.cron
-Source3:	http://www.drupal.org/misc/favicon.ico
-# Source3-md5:	f0ee98b4394dfdab17c16245dd799204
 Patch0:		%{name}-config.patch
 Patch1:		%{name}-includedir.patch
 Patch2:		%{name}-module-themedir.patch
@@ -180,9 +178,8 @@ ln -s htdocs/files $RPM_BUILD_ROOT%{_appdir}/files
 (cd $RPM_BUILD_ROOT%{_appdir}/htdocs && tar cf - --remove-files themes/*/*.{xtmpl,theme}) | tar -xf - -C $RPM_BUILD_ROOT%{_appdir}
 mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
-install %{SOURCE3} $RPM_BUILD_ROOT%{_appdir}/htdocs
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -202,13 +199,13 @@ EOF
 fi
 
 %triggerin -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/apache-%{name}.conf
+%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf
 
 %triggerun -- apache1 >= 1.3.33-2
 %apache_config_uninstall -v 1
 
 %triggerin -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/apache-%{name}.conf
+%apache_config_install -v 2 -c %{_sysconfdir}/apache.conf
 
 %triggerun -- apache >= 2.0.0
 %apache_config_uninstall -v 2
@@ -218,7 +215,7 @@ fi
 %doc *.txt database
 
 %attr(750,root,http) %dir %{_sysconfdir}
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache-%{name}.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 
 %attr(750,root,http) %dir %{_sysconfdir}/sites
 %attr(750,root,http) %dir %{_sysconfdir}/sites/default
