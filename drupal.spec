@@ -133,13 +133,19 @@ Ten pakiet zawiera skrypt wywo³uj±cy uchwyty crona dla Drupala.
 
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
+Summary(pl):	Serwer XMLRPC dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
 %description xmlrpc
-XMLRPC server for Drupal allows other Drupal's authorize with your
+XMLRPC server for Drupal allows other Drupals authorize with your
 Drupal's user creditentials, this is called Distributed Authentication
 in Drupal world.
+
+%description xmlrpc -l pl
+Serwer XMLRPC dla Drupala pozwala innym Drupalom autoryzowaæ siê z
+danymi uwierzytelniaj±cymi u¿ytkownika danego Drupala - jest to
+nazywane rozproszonym uwierzytelnianiem.
 
 %prep
 %setup -q
