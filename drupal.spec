@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.2
-Release:	0.18
+Release:	0.21
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -194,12 +194,12 @@ rm -rf $RPM_BUILD_ROOT
 if [ "$1" = 1 ]; then
 %banner -e %{name} <<EOF
 If this is your first install of Drupal, you need to create drupal database:
-shell$ mysqladmin create drupal
+mysqladmin create drupal
 
 and import initial schema:
-shell$ zcat %{_docdir}/%{name}-%{version}/database/database.mysql.gz | mysql drupal
+zcat %{_docdir}/%{name}-%{version}/database/database.mysql.gz | mysql drupal
 
-(anyway, read INSTALL file from documentation).
+Also read INSTALL from documentation!
 
 EOF
 fi
