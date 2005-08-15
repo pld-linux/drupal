@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.1
+Release:	0.6
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -10,14 +10,14 @@ Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
 # Source0-md5:	f436973f02aa2cea15ef1ca90223082b
 Source1:	%{name}.conf
 Source2:	%{name}.cron
-Patch0:		%{name}-config.patch
 Patch1:		%{name}-includedir.patch
 Patch2:		%{name}-module-themedir.patch
-Patch3:		%{name}-emptypass.patch
+Patch3:		%{name}-replication.patch
 Patch4:		%{name}-themedir.patch
 Patch5:		%{name}-sitesdir.patch
 Patch6:		%{name}-topdir.patch
 Patch7:		%{name}-themedir2.patch
+Patch8:		%{name}-emptypass.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.194
 BuildRequires:	sed >= 4.0
@@ -116,7 +116,6 @@ nazywane rozproszonym uwierzytelnianiem.
 
 %prep
 %setup -q
-%patch0 -p1
 #%patch1 -p1
 #%patch2 -p1
 %patch3 -p1
@@ -124,6 +123,7 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 #grep -rl 'include_once .includes/' . | xargs sed -i -e '
 #	s,include_once \(.\)includes/,include_once \1%{_appdir}/includes/,g
@@ -185,7 +185,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.txt database
+%doc *.txt database README.replication
 
 %attr(750,root,http) %dir %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
