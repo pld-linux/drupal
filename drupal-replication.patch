@@ -229,3 +229,22 @@ diff -urN drupal-4.6.0/includes/database.mysql.inc drupal-test/includes/database
 -?>
 \ No newline at end of file
 +?>
+--- ./sites/default/settings.php~	2005-08-15 16:41:07.000000000 +0300
++++ ./sites/default/settings.php	2005-08-15 16:42:47.000000000 +0300
+@@ -77,8 +77,15 @@
+  * Database URL format:
+  * $db_url = 'mysql://username:password@localhost/database';
+  * $db_url = 'pgsql://username:password@localhost/database';
++ *
++ * Database URL format with MySQL replication:
++ * $db_url = array();
++ * $db_url['default'] = "mysql://username:password@localhost/database";
++ * $db_url['slave1'] = "mysql://username:password@host/database";
+  */
+-$db_url = 'mysql://username:password@localhost/database';
++$db_url = array();
++$db_url['default'] = 'mysql://mysql:@localhost/drupal';
++#$db_url['slave1'] = "mysql://mysql:@mysql-slave/drupal";
+ $db_prefix = '';
+ 
+ /**
