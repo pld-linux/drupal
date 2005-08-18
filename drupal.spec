@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.15
+Release:	0.19
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -145,9 +145,10 @@ cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
 cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
 
-cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
 ln -s /var/lib/%{name} $RPM_BUILD_ROOT%{_appdir}/files
 
+# install themes
+cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
 # move .xtmpl/.theme out of htdocs
 (cd $RPM_BUILD_ROOT%{_appdir}/htdocs && tar cf - --remove-files themes/*/*.{xtmpl,theme}) | tar -xf - -C $RPM_BUILD_ROOT%{_appdir}
 mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
@@ -156,6 +157,10 @@ for a in $RPM_BUILD_ROOT%{_appdir}/htdocs/themes/*; do
 	t=$(basename $a)
 	ln -s ../../htdocs/themes/$t/screenshot.png $RPM_BUILD_ROOT%{_appdir}/themes/$t
 done
+
+# a hack
+s=themes/chameleon/marvin
+ln -s ../../htdocs/$s $RPM_BUILD_ROOT%{_appdir}/$s
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
