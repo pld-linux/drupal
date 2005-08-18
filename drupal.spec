@@ -10,10 +10,7 @@ Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
 # Source0-md5:	f436973f02aa2cea15ef1ca90223082b
 Source1:	%{name}.conf
 Source2:	%{name}.cron
-Patch1:		%{name}-includedir.patch
-Patch2:		%{name}-module-themedir.patch
 Patch3:		%{name}-replication.patch
-Patch4:		%{name}-themedir.patch
 Patch5:		%{name}-sitesdir.patch
 Patch6:		%{name}-topdir.patch
 Patch7:		%{name}-themedir2.patch
@@ -116,18 +113,11 @@ nazywane rozproszonym uwierzytelnianiem.
 
 %prep
 %setup -q
-#%patch1 -p1
-#%patch2 -p1
 %patch3 -p1
-#%patch4 -p1
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-
-#grep -rl 'include_once .includes/' . | xargs sed -i -e '
-#	s,include_once \(.\)includes/,include_once \1%{_appdir}/includes/,g
-#'
 
 find -name '*~' | xargs -r rm -v
 
