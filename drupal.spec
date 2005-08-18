@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.11
+Release:	0.15
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -151,6 +151,11 @@ ln -s /var/lib/%{name} $RPM_BUILD_ROOT%{_appdir}/files
 # move .xtmpl/.theme out of htdocs
 (cd $RPM_BUILD_ROOT%{_appdir}/htdocs && tar cf - --remove-files themes/*/*.{xtmpl,theme}) | tar -xf - -C $RPM_BUILD_ROOT%{_appdir}
 mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
+# make screenshot.png available in appdir
+for a in $RPM_BUILD_ROOT%{_appdir}/htdocs/themes/*; do
+	t=$(basename $a)
+	ln -s ../../htdocs/themes/$t/screenshot.png $RPM_BUILD_ROOT%{_appdir}/themes/$t
+done
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
