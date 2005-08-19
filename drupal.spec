@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.19
+Release:	0.20
 Epoch:		0
 License:	GPL
 Group:		Applications/WWW
@@ -123,7 +123,7 @@ find -name '*~' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,/var/lib/%{name}} \
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,/var/{cache,lib}/%{name}} \
 	$RPM_BUILD_ROOT%{_appdir}/{po,modules/po,htdocs/modules}
 
 cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
@@ -212,6 +212,7 @@ fi
 %{_appdir}/htdocs/modules
 
 %dir %attr(775,root,http) /var/lib/%{name}
+%dir %attr(775,root,http) /var/cache/%{name}
 
 %files cron
 %defattr(644,root,root,755)
