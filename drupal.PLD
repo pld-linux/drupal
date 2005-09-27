@@ -1,0 +1,16 @@
+About Drupal PLD packaging.
+
+I've attempted to make drupal packages with security in mind that code and html
+documents are separated.
+
+Therefore the files needed for web access are in separate htdocs/ directory and
+as drupal is not designed itself with such layout in mind, there are symlinks
+pointing to web root in modules dir. Could have accomplished this with
+patching, but that would need too much research how the drupal works.
+
+With this packaging logic You can easily setup your Drupal instance with
+non-Apache web server (like lighttpd) just pointing the document root to
+/usr/share/drupal/htdocs.
+
+Only exception for now is tinymce module which creates alias to shared tinymce
+package. but that single alias is easy to add at least in lighttpd.
