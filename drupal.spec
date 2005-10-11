@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.23
+Release:	0.25
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -28,7 +28,7 @@ Requires:	apache(mod_alias)
 Requires:	php >= 3:4.3.3
 Requires:	php-mysql
 Requires:	php-pcre
-#Requires:	php-pgsql
+Requires:	%{name}(DB_Driver)
 Requires:	php-xml
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -95,6 +95,38 @@ This package contains script which invokes cron hooks for Drupal.
 
 %description cron -l pl
 Ten pakiet zawiera skrypt wywo³uj±cy uchwyty crona dla Drupala.
+
+%package db-mysql
+Summary:	Drupal DB Driver for MySQL
+Summary(pl):	Sterownik bazy danych Drupal dla MySQL-a
+Group:		Applications/WWW
+Requires:	php-mysql
+Provides:	%{name}(DB_Driver) = %{version}-%{release}
+
+%description db-mysql
+This virtual package provides MySQL database backend for Drupal.
+
+%description db-mysql -l pl
+Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla
+Drupal.
+
+%package db-pgsql
+Summary:	Drupal DB Driver for PostgreSQL
+Summary(pl):	Sterownik bazy danych eGroupware dla Dripala
+Group:		Applications/WWW
+Requires:	php-pgsql
+Provides:	%{name}(DB_Driver) = %{version}-%{release}
+
+%description db-pgsql
+This virtual package provides PostgreSQL database backend for
+Drupala.
+
+NOTE: This driver is not tested in PLD, and not all modules have
+database schema for PostgreSQL. Use this driver at your own risk!
+
+%description db-pgsql -l pl
+Ten wirtualny pakiet dostarcza backend bazy danych PostgreSQL dla
+Drupala.
 
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
@@ -221,6 +253,12 @@ fi
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}
 %{_appdir}/cron.php
+
+%files db-mysql
+%defattr(644,root,root,755)
+
+%files db-pgsql
+%defattr(644,root,root,755)
 
 %files xmlrpc
 %defattr(644,root,root,755)
