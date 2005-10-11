@@ -28,7 +28,7 @@ Requires:	apache(mod_alias)
 Requires:	php >= 3:4.3.3
 Requires:	php-mysql
 Requires:	php-pcre
-Requires:	%{name}(DB_Driver)
+Requires:	%{name}(DB_Driver) = %{version}-%{release}
 Requires:	php-xml
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -98,7 +98,7 @@ Ten pakiet zawiera skrypt wywo³uj±cy uchwyty crona dla Drupala.
 
 %package db-mysql
 Summary:	Drupal DB Driver for MySQL
-Summary(pl):	Sterownik bazy danych Drupal dla MySQL-a
+Summary(pl):	Sterownik bazy danych MySQL dla Drupala
 Group:		Applications/WWW
 Requires:	php-mysql
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
@@ -108,18 +108,18 @@ This virtual package provides MySQL database backend for Drupal.
 
 %description db-mysql -l pl
 Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla
-Drupal.
+Drupala.
 
 %package db-pgsql
 Summary:	Drupal DB Driver for PostgreSQL
-Summary(pl):	Sterownik bazy danych eGroupware dla Dripala
+Summary(pl):	Sterownik bazy danych PostgreSQL dla Drupala
 Group:		Applications/WWW
 Requires:	php-pgsql
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
 
 %description db-pgsql
 This virtual package provides PostgreSQL database backend for
-Drupala.
+Drupal.
 
 NOTE: This driver is not tested in PLD, and not all modules have
 database schema for PostgreSQL. Use this driver at your own risk!
@@ -127,6 +127,10 @@ database schema for PostgreSQL. Use this driver at your own risk!
 %description db-pgsql -l pl
 Ten wirtualny pakiet dostarcza backend bazy danych PostgreSQL dla
 Drupala.
+
+UWAGA: Ten sterownik nie by³ testowany w PLD i nie wszystkie modu³y
+maj± schematy bazy danych dla PostgreSQL-a. Mo¿na go u¿ywaæ na w³asne
+ryzyko.
 
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
