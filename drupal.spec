@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.25
+Release:	0.26
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -206,7 +206,7 @@ mysqladmin create drupal
 and import initial schema:
 zcat %{_docdir}/%{name}-%{version}/database/database.mysql.gz | mysql drupal
 
-Also read INSTALL from documentation!
+Be sure to read INSTALL.txt from documentation!
 
 EOF
 fi
