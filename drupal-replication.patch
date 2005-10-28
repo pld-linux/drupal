@@ -248,3 +248,14 @@ diff -urN drupal-4.6.0/includes/database.mysql.inc drupal-test/includes/database
  $db_prefix = '';
  
  /**
+--- ./includes/database.mysql.inc~	2005-10-28 22:04:50.000000000 +0300
++++ ./includes/database.mysql.inc	2005-10-28 22:05:32.000000000 +0300
+@@ -29,7 +29,7 @@
+   }
+ 
+   // For replication setups, we will assume that dieing is bad 
+-  $connection = mysql_pconnect($url['host'], $url['user'], @$url['pass'], TRUE);
++  $connection = mysql_connect($url['host'], $url['user'], @$url['pass'], TRUE);
+   if(!is_resource($connection) && $critical) {
+     die(mysql_error());
+   }
