@@ -10,14 +10,14 @@
 #   mysql_select_db(substr($url['path'], 1)) or die('unable to select database');
 # 
 #   return $connection;
---- ./includes/database.mysql.inc~	2005-08-15 16:11:07.000000000 +0300
-+++ ./includes/database.mysql.inc	2005-08-15 16:11:39.000000000 +0300
+--- ./includes/database.mysql.inc~	2005-10-28 22:32:31.000000000 +0300
++++ ./includes/database.mysql.inc	2005-10-28 22:32:57.000000000 +0300
 @@ -29,7 +29,7 @@
    }
  
    // For replication setups, we will assume that dieing is bad 
--  $connection = mysql_pconnect($url['host'], $url['user'], $url['pass'], TRUE);
-+  $connection = mysql_pconnect($url['host'], $url['user'], @$url['pass'], TRUE);
+-  $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE);
++  $connection = mysql_connect($url['host'], $url['user'], @$url['pass'], TRUE);
    if(!is_resource($connection) && $critical) {
      die(mysql_error());
    }
