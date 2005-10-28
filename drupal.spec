@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.26
+Release:	0.28
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -10,12 +10,12 @@ Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
-Patch3:		%{name}-replication.patch
-Patch5:		%{name}-sitesdir.patch
-Patch6:		%{name}-topdir.patch
-Patch7:		%{name}-themedir2.patch
-Patch8:		%{name}-emptypass.patch
-Patch9:		%{name}-cron.patch
+Patch0:		%{name}-replication.patch
+Patch1:		%{name}-sitesdir.patch
+Patch2:		%{name}-topdir.patch
+Patch3:		%{name}-themedir2.patch
+Patch4:		%{name}-emptypass.patch
+Patch5:		%{name}-cron.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.194
 BuildRequires:	sed >= 4.0
@@ -150,12 +150,12 @@ nazywane rozproszonym uwierzytelnianiem.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
 %patch3 -p1
+%patch4 -p1
 %patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
 
 find -name '*~' | xargs -r rm -v
 cp %{SOURCE3} README.PLD
