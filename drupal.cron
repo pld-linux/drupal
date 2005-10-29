@@ -2,6 +2,6 @@
 # bounce messages back to root
 MAILTO=root
 
-0 * * * * http cd /usr/share/drupal && /usr/bin/php4 -q cron.php
+0 * * * * http cd /usr/share/drupal && /usr/bin/php cron.php
 
 # vim:syn=crontab
