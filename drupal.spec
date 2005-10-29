@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.28
+Release:	0.30
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -89,6 +89,7 @@ Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
 Requires:	php-cli >= 3:4.3.3
+Requires:	/usr/bin/php
 
 %description cron
 This package contains script which invokes cron hooks for Drupal.
