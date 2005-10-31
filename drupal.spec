@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.32
+Release:	0.33
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -198,20 +198,26 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
+%post db-mysql
 if [ "$1" = 1 ]; then
-%banner -e %{name} <<EOF
-If this is your first install of Drupal, you need to create drupal database:
+%banner -e %{name}-db-mysql <<EOF
+If this is your first install of Drupal, you need to create Drupal database:
+
 mysqladmin create drupal
-
-and import initial schema:
-zcat %{_docdir}/%{name}-%{version}/database/database.mysql.gz | mysql drupal
-
-and grant permissions:
+zcat %{_docdir}/%{name}-db-mysql-%{version}/database.mysql.gz | mysql drupal
 mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON drupal.* TO 'drupal'@'localhost' IDENTIFIED BY 'PASSWORD'"
 mysql -e "GRANT CREATE TEMPORARY TABLES, LOCK TABLES ON *.* TO 'drupal'@'localhost"
 
-Be sure to read INSTALL.txt from documentation!
+EOF
+fi
+
+%post db-pgsql
+if [ "$1" = 1 ]; then
+%banner -e %{name}-db-pgsql <<EOF
+If this is your first install of Drupal, you need to create Drupal database:
+
+and import initial schema from
+%{_docdir}/%{name}-db-pgsql-%{version}/database.pgsql.gz
 
 EOF
 fi
@@ -230,7 +236,8 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc *.txt database README.replication README.PLD
+%doc *.txt README.PLD
+%doc database/updates.inc
 
 %attr(750,root,http) %dir %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
@@ -265,9 +272,12 @@ fi
 
 %files db-mysql
 %defattr(644,root,root,755)
+%doc database/*.mysql
+%doc README.replication
 
 %files db-pgsql
 %defattr(644,root,root,755)
+%doc database/*.pgsql
 
 %files xmlrpc
 %defattr(644,root,root,755)
