@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.30
+Release:	0.32
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -159,7 +159,7 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch5 -p1
 
 find -name '*~' | xargs -r rm -v
-cp %{SOURCE3} README.PLD
+cp -p %{SOURCE3} README.PLD
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -206,6 +206,10 @@ mysqladmin create drupal
 
 and import initial schema:
 zcat %{_docdir}/%{name}-%{version}/database/database.mysql.gz | mysql drupal
+
+and grant permissions:
+mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON drupal.* TO 'drupal'@'localhost' IDENTIFIED BY 'PASSWORD'"
+mysql -e "GRANT CREATE TEMPORARY TABLES, LOCK TABLES ON *.* TO 'drupal'@'localhost"
 
 Be sure to read INSTALL.txt from documentation!
 
