@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.3
-Release:	0.33
+Release:	0.34
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -206,7 +206,7 @@ If this is your first install of Drupal, you need to create Drupal database:
 mysqladmin create drupal
 zcat %{_docdir}/%{name}-db-mysql-%{version}/database.mysql.gz | mysql drupal
 mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON drupal.* TO 'drupal'@'localhost' IDENTIFIED BY 'PASSWORD'"
-mysql -e "GRANT CREATE TEMPORARY TABLES, LOCK TABLES ON *.* TO 'drupal'@'localhost"
+mysql -e "GRANT CREATE TEMPORARY TABLES, LOCK TABLES ON *.* TO 'drupal'@'localhost'"
 
 EOF
 fi
