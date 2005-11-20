@@ -19,7 +19,7 @@ Patch5:		%{name}-cron.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.194
 BuildRequires:	sed >= 4.0
-Requires:	apache >= 1.3.33-3
+Requires:	webserver = apache
 Requires:	apache(mod_dir)
 Requires:	apache(mod_access)
 Requires:	apache(mod_expires)
@@ -30,6 +30,7 @@ Requires:	php-mysql
 Requires:	php-pcre
 Requires:	%{name}(DB_Driver) = %{version}-%{release}
 Requires:	php-xml
+Conflicts:	apache1 < 1.3.33-3
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
