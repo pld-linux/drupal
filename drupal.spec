@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.4
-Release:	0.1
+Release:	0.5
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -17,8 +17,9 @@ Patch3:		%{name}-themedir2.patch
 Patch4:		%{name}-emptypass.patch
 Patch5:		%{name}-cron.patch
 URL:		http://drupal.org/
-BuildRequires:	rpmbuild(macros) >= 1.194
+BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
+Requires:	webapps
 Requires:	webserver = apache
 Requires:	apache(mod_dir)
 Requires:	apache(mod_access)
@@ -30,12 +31,13 @@ Requires:	php-mysql
 Requires:	php-pcre
 Requires:	%{name}(DB_Driver) = %{version}-%{release}
 Requires:	php-xml
-Conflicts:	apache1 < 1.3.33-3
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_appdir		%{_datadir}/%{name}
-%define		_sysconfdir	/etc/%{name}
+%define		_webapps	/etc/webapps
+%define		_webapp		%{name}
+%define		_sysconfdir	%{_webapps}/%{_webapp}
 
 %description
 Drupal is software that allows an individual or a community of users
@@ -194,6 +196,7 @@ s=themes/chameleon/marvin
 ln -s ../../htdocs/$s $RPM_BUILD_ROOT%{_appdir}/$s
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
 %clean
@@ -223,25 +226,77 @@ and import initial schema from
 EOF
 fi
 
-%triggerin -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf
+%triggerin -- apache1
+%webapp_register apache %{_webapp}
 
-%triggerun -- apache1 >= 1.3.33-2
-%apache_config_uninstall -v 1
+%triggerun -- apache1
+%webapp_unregister apache %{_webapp}
 
 %triggerin -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/apache.conf
+%webapp_register httpd %{_webapp}
 
 %triggerun -- apache >= 2.0.0
-%apache_config_uninstall -v 2
+%webapp_unregister httpd %{_webapp}
+
+%triggerpostun -- %{name} < 4.6.4-0.4
+# rescue app configs.
+if [ -f /etc/drupal/sites/default/settings.php.rpmsave ]; then
+	mv -f %{_sysconfdir}/sites/default/settings.php{,.rpmnew}
+	mv -f /etc/drupal/sites/default/settings.php.rpmsave %{_sysconfdir}/sites/default/settings.php
+fi
+# other configured sites, if any
+for i in /etc/drupal/sites/*; do
+	d=$(basename $i)
+	[ "$d" = "default" ] && continue
+	mv -f %{_sysconfdir}/sites/$d{,.rpmnew}
+	mv -f $i %{_sysconfdir}/sites/$d
+done
+
+# migrate from apache-config macros
+if [ -f /etc/drupal/apache.conf.rpmsave ]; then
+	if [ -d /etc/apache/webapps.d ]; then
+		cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
+		cp -f /etc/drupal/apache.conf.rpmsave %{_sysconfdir}/apache.conf
+	fi
+
+	if [ -d /etc/httpd/webapps.d ]; then
+		cp -f %{_sysconfdir}/httpd.conf{,.rpmnew}
+		cp -f /etc/drupal/apache.conf.rpmsave %{_sysconfdir}/httpd.conf
+	fi
+	rm -f /etc/drupal/apache.conf.rpmsave
+fi
+
+# place new config location, as trigger puts config only on first install, do it here.
+if [ -L /etc/apache/conf.d/99_%{name}.conf ]; then
+	rm -f /etc/apache/conf.d/99_%{name}.conf
+	/usr/sbin/webapp register apache %{_webapp}
+	apache_reload=1
+fi
+if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
+	rm -f /etc/httpd/httpd.conf/99_%{name}.conf
+	/usr/sbin/webapp register httpd %{_webapp}
+	httpd_reload=1
+fi
+
+if [ "$httpd_reload" ]; then
+	if [ -f /var/lock/subsys/httpd ]; then
+		/etc/rc.d/init.d/httpd reload 1>&2
+	fi
+fi
+if [ "$apache_reload" ]; then
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache reload 1>&2
+	fi
+fi
 
 %files
 %defattr(644,root,root,755)
 %doc *.txt README.PLD
 %doc database/updates.inc
 
-%attr(750,root,http) %dir %{_sysconfdir}
+%dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
 
 %attr(750,root,http) %dir %{_sysconfdir}/sites
 %attr(750,root,http) %dir %{_sysconfdir}/sites/default
