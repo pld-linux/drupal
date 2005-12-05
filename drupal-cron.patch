@@ -20,3 +20,13 @@
      $result = db_query("SELECT u.* FROM {users} u WHERE u.uid = 0");
    }
  
+--- ./cron.php~	2005-01-09 11:22:38.000000000 +0200
++++ ./cron.php	2005-12-05 13:27:39.904990542 +0200
+@@ -12,6 +12,7 @@
+ // If not in 'safe mode', increase the maximum execution time:
+ if (!ini_get('safe_mode')) {
+   set_time_limit(240);
++  ini_set('memory_limit', '12M');
+ }
+ 
+ // Check if the last cron run completed
