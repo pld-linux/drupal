@@ -6,7 +6,7 @@ diff -ur ./includes/bootstrap.inc ../drupal1/includes/bootstrap.inc
    }
  
 -  $confdir = 'sites';
-+  $confdir = '/etc/drupal/sites';
++  $confdir = '/etc/webapps/drupal/sites';
    $uri = explode('/', $_SERVER['PHP_SELF']);
    $server = explode('.', rtrim($_SERVER['HTTP_HOST'], '.'));
    for ($i = count($uri) - 1; $i > 0; $i--) {
