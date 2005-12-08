@@ -2,11 +2,11 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.4
-Release:	0.5
+Release:	0.8
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	ba73d2ef317ede456d9408e77d1a247d
+# Source0-md5:	c61d95c766a7ff624abbe04c2430e5df
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
