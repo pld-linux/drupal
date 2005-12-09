@@ -4,7 +4,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.4
-Release:	0.11
+Release:	0.13
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -184,6 +184,8 @@ cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
 
 ln -s /var/lib/%{name} $RPM_BUILD_ROOT%{_appdir}/files
+# needed for node.module for syndication icon
+ln -s htdocs/misc $RPM_BUILD_ROOT%{_appdir}
 
 # install themes
 cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
