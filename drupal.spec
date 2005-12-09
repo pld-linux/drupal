@@ -3,12 +3,14 @@
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
-Version:	4.6.4
-Release:	0.11
+Version:	4.7.0
+%define	_beta	beta1
+Release:	0.%{_beta}.1
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	c61d95c766a7ff624abbe04c2430e5df
+#Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
+Source0:	http://drupal.org/files/projects/%{name}-%{version}-beta1.tar.gz
+# Source0-md5:	42c9efed2923e498dcc757194158df8a
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
@@ -115,8 +117,7 @@ Provides:	%{name}(DB_Driver) = %{version}-%{release}
 This virtual package provides MySQL database backend for Drupal.
 
 %description db-mysql -l pl
-Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla
-Drupala.
+Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla Drupala.
 
 %package db-pgsql
 Summary:	Drupal DB Driver for PostgreSQL
@@ -126,8 +127,7 @@ Requires:	php-pgsql
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
 
 %description db-pgsql
-This virtual package provides PostgreSQL database backend for
-Drupal.
+This virtual package provides PostgreSQL database backend for Drupal.
 
 NOTE: This driver is not tested in PLD, and not all modules have
 database schema for PostgreSQL. Use this driver at your own risk!
@@ -157,14 +157,14 @@ danymi uwierzytelniaj±cymi u¿ytkownika danego Drupala - jest to
 nazywane rozproszonym uwierzytelnianiem.
 
 %prep
-%setup -q
-%patch0 -p1
+%setup -q %{?_beta:-n %{name}-cvs}
+#%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
+#%patch4 -p1
 %patch5 -p1
-%patch6 -p0
+#%patch6 -p0
 
 find -name '*~' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
@@ -174,7 +174,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,/var/{cache,lib}/%{name}} \
 	$RPM_BUILD_ROOT%{_appdir}/{po,modules/po,htdocs/modules}
 
-cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 
@@ -317,7 +317,6 @@ fi
 %{_appdir}/files
 
 %dir %{_appdir}/htdocs
-%{_appdir}/htdocs/*.ico
 %{_appdir}/htdocs/index.php
 %{_appdir}/htdocs/misc
 %{_appdir}/htdocs/themes
@@ -334,7 +333,7 @@ fi
 %files db-mysql
 %defattr(644,root,root,755)
 %doc database/*.mysql
-%doc README.replication
+#%doc README.replication
 
 %files db-pgsql
 %defattr(644,root,root,755)
