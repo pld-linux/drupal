@@ -1,20 +1,20 @@
---- ./index.php~	2004-08-21 09:42:34.000000000 +0300
-+++ ./index.php	2005-05-20 14:10:24.260339523 +0300
+--- ./index.php~	2005-12-09 16:03:31.000000000 +0200
++++ ./index.php	2005-12-09 16:04:54.000000000 +0200
 @@ -9,6 +9,7 @@
   * prints the appropriate page.
   */
  
 +chdir('..');
- include_once 'includes/bootstrap.inc';
- drupal_page_header();
- include_once 'includes/common.inc';
---- drupal-4.6.2/xmlrpc.php~	2004-08-21 09:42:34.000000000 +0300
-+++ drupal-4.6.2/xmlrpc.php	2005-07-06 18:44:26.000000000 +0300
+ require_once './includes/bootstrap.inc';
+ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+ 
+--- ./xmlrpc.php~	2005-12-09 16:03:31.000000000 +0200
++++ ./xmlrpc.php	2005-12-09 16:05:14.000000000 +0200
 @@ -6,6 +6,7 @@
   * PHP page for handling incoming XML-RPC requests from clients.
   */
  
 +chdir('..');
- include_once 'includes/bootstrap.inc';
- include_once 'includes/common.inc';
- include_once 'includes/xmlrpc.inc';
+ include_once './includes/bootstrap.inc';
+ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+ include_once './includes/xmlrpc.inc';
