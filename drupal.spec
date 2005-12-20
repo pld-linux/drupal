@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.5
-Release:	0.2
+Release:	0.10
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -17,6 +17,7 @@ Patch3:		%{name}-themedir2.patch
 Patch4:		%{name}-emptypass.patch
 Patch5:		%{name}-cron.patch
 Patch6:		%{name}-19298-cache.patch
+Patch7:		%{name}-update-cli.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
@@ -137,6 +138,14 @@ UWAGA: Ten sterownik nie by³ testowany w PLD i nie wszystkie modu³y
 maj± schematy bazy danych dla PostgreSQL-a. Mo¿na go u¿ywaæ na w³asne
 ryzyko.
 
+%package update
+Summary:	Package to perform Drupal database updates
+Group:		Applications/WWW
+Requires:	%{name} = %{version}-%{release}
+
+%description update
+This package contains scripts needed to do database updates via web.
+
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
 Summary(pl):	Serwer XMLRPC dla Drupala
@@ -162,6 +171,7 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p0
+%patch7 -p1
 
 find -name '*~' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
@@ -169,11 +179,12 @@ cp -p %{SOURCE3} README.PLD
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,/var/{cache,lib}/%{name}} \
-	$RPM_BUILD_ROOT%{_appdir}/{po,modules/po,htdocs/modules}
+	$RPM_BUILD_ROOT%{_appdir}/{po,database,modules/po,htdocs/modules}
 
 cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
-cp -a xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a update.php xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a database/updates.inc $RPM_BUILD_ROOT%{_appdir}/database
 
 cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
 cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
@@ -296,7 +307,6 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc *.txt README.PLD
-%doc database/updates.inc
 
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
@@ -339,6 +349,11 @@ fi
 %files db-pgsql
 %defattr(644,root,root,755)
 %doc database/*.pgsql
+
+%files update
+%defattr(644,root,root,755)
+%{_appdir}/htdocs/update.php
+%{_appdir}/database
 
 %files xmlrpc
 %defattr(644,root,root,755)
