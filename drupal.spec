@@ -1,16 +1,13 @@
-# TODO
-# - http://drupal.org/node/39670
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.7.0
-%define	_beta	beta1
+%define	_beta	beta2
 Release:	0.%{_beta}.1
 License:	GPL
 Group:		Applications/WWW
-#Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
-Source0:	http://drupal.org/files/projects/%{name}-%{version}-beta1.tar.gz
-# Source0-md5:	42c9efed2923e498dcc757194158df8a
+Source0:	http://drupal.org/files/projects/%{name}-%{version}-%{_beta}.tar.gz
+# Source0-md5:	0b6d8fd9bd08e7651cf91ff2e95c1c31
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
@@ -20,23 +17,21 @@ Patch2:		%{name}-topdir.patch
 Patch3:		%{name}-themedir2.patch
 Patch4:		%{name}-emptypass.patch
 Patch5:		%{name}-cron.patch
-# http://drupal.org/node/39566
-Patch6:		http://drupal.org/files/issues/check_url.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
-Requires:	webapps
-Requires:	webserver = apache
-Requires:	apache(mod_dir)
+Requires:	%{name}(DB_Driver) = %{version}-%{release}
 Requires:	apache(mod_access)
+Requires:	apache(mod_alias)
+Requires:	apache(mod_dir)
 Requires:	apache(mod_expires)
 Requires:	apache(mod_rewrite)
-Requires:	apache(mod_alias)
-Requires:	php >= 3:4.3.3
 Requires:	php-mysql
 Requires:	php-pcre
-Requires:	%{name}(DB_Driver) = %{version}-%{release}
 Requires:	php-xml
+Requires:	php >= 3:4.3.3
+Requires:	webapps
+Requires:	webserver = apache
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -96,9 +91,9 @@ Summary:	Drupal cron
 Summary(pl):	Us³uga cron dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
+Requires:	/usr/bin/php
 Requires:	crondaemon
 Requires:	php-cli >= 3:4.3.3
-Requires:	/usr/bin/php
 
 %description cron
 This package contains script which invokes cron hooks for Drupal.
@@ -157,14 +152,13 @@ danymi uwierzytelniaj±cymi u¿ytkownika danego Drupala - jest to
 nazywane rozproszonym uwierzytelnianiem.
 
 %prep
-%setup -q %{?_beta:-n %{name}-cvs}
+%setup -q %{?_beta:-n %{name}-%{version}-%{_beta}}
 #%patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 %patch3 -p1
 #%patch4 -p1
-%patch5 -p1
-#%patch6 -p0
+#%patch5 -p1
 
 find -name '*~' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
