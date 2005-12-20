@@ -1,0 +1,43 @@
+--- drupal-4.6.5/update.php	2005-12-20 17:30:16.000000000 +0200
++++ drupal-4.6.5/update.php	2005-12-20 18:26:23.000000000 +0200
+@@ -206,6 +206,40 @@
+   print update_page_footer();
+ }
+ 
++if (php_sapi_name() == 'cli') {
++	# get index from $sql_updates
++	$hash = array_flip(array_keys($sql_updates));
++	if (!isset($hash[$argv[2]])) {
++		die("Can't find requested update: $argv[2]\n");
++	}
++	# "0" reserved for "All"
++	$start = 1 + $hash[$argv[2]];
++
++	$_POST['op'] = $argv[1];
++	$_POST['edit'] = array(
++		'start' => $start,
++	);
++	$_SERVER['REMOTE_ADDR'] = '0.0.0.0';
++
++	include_once "includes/bootstrap.inc";
++	include_once "includes/common.inc";
++
++	ob_start();
++    update_page();
++	$page = ob_get_contents();
++	ob_end_clean();
++
++	# primitive html renderer ;)
++	if (preg_match('#<body>(.+)</body>#s', $page, $m)) {
++		$page = $m[1];
++		$page = preg_replace('#<div id="logo">(.*?)</div>#s', '', $page);
++		$page = preg_replace('#<div id="update">(.*?)</div>#s', '', $page);
++	}
++
++	echo strip_tags($page), "\n";
++	exit;
++}
++
+ if (isset($_GET["op"])) {
+   include_once "includes/bootstrap.inc";
+   include_once "includes/common.inc";
