@@ -144,7 +144,7 @@ diff -urN drupal-4.6.0/includes/database.inc drupal-test/includes/database.inc
  
  /**
 diff -urN drupal-4.6.0/includes/database.mysql.inc drupal-test/includes/database.mysql.inc
---- drupal-4.6.0/includes/database.mysql.inc	2005-04-14 13:50:23.000000000 -0500
+--- drupal-4.6.5/includes/database.mysql.inc	2005-04-14 13:50:23.000000000 -0500
 +++ drupal-test/includes/database.mysql.inc	2005-05-29 09:28:22.490546558 -0500
 @@ -20,7 +20,7 @@
   * performance, however, when the overhead to connect to your database is high
@@ -160,18 +160,18 @@ diff -urN drupal-4.6.0/includes/database.mysql.inc drupal-test/includes/database
    }
  
 -  $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE) or die(mysql_error());
--  mysql_select_db(substr($url['path'], 1)) or die('unable to select database');
+-  mysql_select_db(substr($url['path'], 1), $connection) or die('unable to select database');
 +  // For replication setups, we will assume that dieing is bad 
-+  $connection = mysql_pconnect($url['host'], $url['user'], $url['pass'], TRUE);
-+  if(!is_resource($connection) && $critical) {
++  $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE);
++  if (!is_resource($connection) && $critical) {
 +    die(mysql_error());
 +  }
 +  // We die on bad slaves.  These should be taken care of
 +  // maybe hook this somehow or something
-+  mysql_select_db(substr($url['path'], 1)) or die(mysql_error());
++  mysql_select_db(substr($url['path'], 1), $connection) or die(mysql_error());
  
 -  return $connection;
-+  return ($connection)?$connection:false;
++  return ($connection) ? $connection : false;
  }
  
  /**
@@ -214,21 +214,6 @@ diff -urN drupal-4.6.0/includes/database.mysql.inc drupal-test/includes/database
    if (variable_get('dev_query', 0)) {
      list($usec, $sec) = explode(' ', microtime());
      $stop = (float)$usec + (float)$sec;
-@@ -67,6 +97,7 @@
-   }
- }
- 
-+
- /**
-  * Fetch one result row from the previous query as an object.
-  *
-@@ -239,4 +270,4 @@
-  * @} End of "ingroup database".
-  */
- 
--?>
-\ No newline at end of file
-+?>
 --- ./sites/default/settings.php~	2005-08-15 16:41:07.000000000 +0300
 +++ ./sites/default/settings.php	2005-08-15 16:42:47.000000000 +0300
 @@ -77,8 +77,15 @@
@@ -248,14 +233,3 @@ diff -urN drupal-4.6.0/includes/database.mysql.inc drupal-test/includes/database
  $db_prefix = '';
  
  /**
---- ./includes/database.mysql.inc~	2005-10-28 22:31:38.000000000 +0300
-+++ ./includes/database.mysql.inc	2005-10-28 22:31:53.000000000 +0300
-@@ -29,7 +29,7 @@
-   }
- 
-   // For replication setups, we will assume that dieing is bad 
--  $connection = mysql_pconnect($url['host'], $url['user'], $url['pass'], TRUE);
-+  $connection = mysql_connect($url['host'], $url['user'], $url['pass'], TRUE);
-   if(!is_resource($connection) && $critical) {
-     die(mysql_error());
-   }

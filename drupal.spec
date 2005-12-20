@@ -1,14 +1,12 @@
-# TODO
-# - http://drupal.org/node/39670
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
-Version:	4.6.4
-Release:	0.14
+Version:	4.6.5
+Release:	0.1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	c61d95c766a7ff624abbe04c2430e5df
+# Source0-md5:	21e5e768d92fb6ecf52d56cacd37706e
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
@@ -18,8 +16,6 @@ Patch2:		%{name}-topdir.patch
 Patch3:		%{name}-themedir2.patch
 Patch4:		%{name}-emptypass.patch
 Patch5:		%{name}-cron.patch
-# http://drupal.org/node/39566
-Patch6:		http://drupal.org/files/issues/check_url.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
@@ -164,7 +160,6 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
-%patch6 -p0
 
 find -name '*~' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
