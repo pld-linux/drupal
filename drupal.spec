@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.5
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -16,6 +16,7 @@ Patch2:		%{name}-topdir.patch
 Patch3:		%{name}-themedir2.patch
 Patch4:		%{name}-emptypass.patch
 Patch5:		%{name}-cron.patch
+Patch6:		%{name}-19298-cache.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
@@ -160,6 +161,7 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p0
 
 find -name '*~' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
