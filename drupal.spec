@@ -3,7 +3,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.7.0
-Release:	0.%{_beta}.1
+Release:	0.%{_beta}.3
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}-%{_beta}.tar.gz
@@ -135,6 +135,14 @@ UWAGA: Ten sterownik nie by³ testowany w PLD i nie wszystkie modu³y
 maj± schematy bazy danych dla PostgreSQL-a. Mo¿na go u¿ywaæ na w³asne
 ryzyko.
 
+%package update
+Summary:	Package to perform Drupal database updates
+Group:		Applications/WWW
+Requires:	%{name} = %{version}-%{release}
+
+%description update
+This package contains scripts needed to do database updates via web.
+
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
 Summary(pl):	Serwer XMLRPC dla Drupala
@@ -166,18 +174,23 @@ cp -p %{SOURCE3} README.PLD
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,/var/{cache,lib}/%{name}} \
-	$RPM_BUILD_ROOT%{_appdir}/{po,modules/po,htdocs/modules}
+	$RPM_BUILD_ROOT%{_appdir}/{po,database,modules/po,htdocs/modules}
 
 cp -a index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
-cp -a xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a update.php xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a database/updates.inc $RPM_BUILD_ROOT%{_appdir}/database
 
 cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
 cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
 cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
+# avoid pulling perl dep
+chmod -x $RPM_BUILD_ROOT%{_appdir}/scripts/*
 
 ln -s /var/lib/%{name} $RPM_BUILD_ROOT%{_appdir}/files
+# needed for node.module for syndication icon
+ln -s htdocs/misc $RPM_BUILD_ROOT%{_appdir}
 
 # install themes
 cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
@@ -291,7 +304,6 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc *.txt README.PLD
-%doc database/updates.inc
 
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
@@ -309,6 +321,7 @@ fi
 %{_appdir}/po
 # symlink
 %{_appdir}/files
+%{_appdir}/misc
 
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/index.php
@@ -332,6 +345,11 @@ fi
 %files db-pgsql
 %defattr(644,root,root,755)
 %doc database/*.pgsql
+
+%files update
+%defattr(644,root,root,755)
+%{_appdir}/htdocs/update.php
+%{_appdir}/database
 
 %files xmlrpc
 %defattr(644,root,root,755)
