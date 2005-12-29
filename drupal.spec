@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.5
-Release:	0.10
+Release:	0.11
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -21,18 +21,18 @@ Patch7:		%{name}-update-cli.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
-Requires:	webapps
-Requires:	webserver = apache
-Requires:	apache(mod_dir)
+Requires:	%{name}(DB_Driver) = %{version}-%{release}
 Requires:	apache(mod_access)
+Requires:	apache(mod_alias)
+Requires:	apache(mod_dir)
 Requires:	apache(mod_expires)
 Requires:	apache(mod_rewrite)
-Requires:	apache(mod_alias)
 Requires:	php >= 3:4.3.3
 Requires:	php-mysql
 Requires:	php-pcre
-Requires:	%{name}(DB_Driver) = %{version}-%{release}
 Requires:	php-xml
+Requires:	webapps
+Requires:	webserver = apache
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -92,9 +92,9 @@ Summary:	Drupal cron
 Summary(pl):	Us³uga cron dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
+Requires:	/usr/bin/php
 Requires:	crondaemon
 Requires:	php-cli >= 3:4.3.3
-Requires:	/usr/bin/php
 
 %description cron
 This package contains script which invokes cron hooks for Drupal.
@@ -113,8 +113,7 @@ Provides:	%{name}(DB_Driver) = %{version}-%{release}
 This virtual package provides MySQL database backend for Drupal.
 
 %description db-mysql -l pl
-Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla
-Drupala.
+Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla Drupala.
 
 %package db-pgsql
 Summary:	Drupal DB Driver for PostgreSQL
@@ -124,8 +123,7 @@ Requires:	php-pgsql
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
 
 %description db-pgsql
-This virtual package provides PostgreSQL database backend for
-Drupal.
+This virtual package provides PostgreSQL database backend for Drupal.
 
 NOTE: This driver is not tested in PLD, and not all modules have
 database schema for PostgreSQL. Use this driver at your own risk!
