@@ -3,7 +3,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.7.0
-Release:	0.%{_beta}.3
+Release:	0.%{_beta}.13
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}-%{_beta}.tar.gz
@@ -13,10 +13,11 @@ Source2:	%{name}.cron
 Source3:	%{name}.PLD
 #Patch0:	%{name}-replication.patch
 Patch1:		%{name}-sitesdir.patch
-#Patch2:	%{name}-topdir.patch
+Patch2:		%{name}-topdir.patch
 Patch3:		%{name}-themedir2.patch
 #Patch4:	%{name}-emptypass.patch
-#Patch5:	%{name}-cron.patch
+Patch5:	%{name}-cron.patch
+Patch6:	%{name}-mysql.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
@@ -27,6 +28,7 @@ Requires:	apache(mod_dir)
 Requires:	apache(mod_expires)
 Requires:	apache(mod_rewrite)
 Requires:	php >= 3:4.3.3
+Requires:	php-mbstring
 Requires:	php-mysql
 Requires:	php-pcre
 Requires:	php-xml
@@ -91,7 +93,6 @@ Summary:	Drupal cron
 Summary(pl):	Us³uga cron dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	crondaemon
 Requires:	php-cli >= 3:4.3.3
 
@@ -163,10 +164,11 @@ nazywane rozproszonym uwierzytelnianiem.
 %setup -q %{?_beta:-n %{name}-%{version}-%{_beta}}
 #%patch0 -p1
 %patch1 -p1
-#%patch2 -p1
+%patch2 -p1
 %patch3 -p1
 #%patch4 -p1
-#%patch5 -p1
+%patch5 -p1
+%patch6 -p1
 
 find -name '*~' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
@@ -181,7 +183,7 @@ cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a update.php xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a database/updates.inc $RPM_BUILD_ROOT%{_appdir}/database
 
-cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
+install cron.php $RPM_BUILD_ROOT%{_appdir}
 cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
 cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
@@ -193,19 +195,34 @@ ln -s /var/lib/%{name} $RPM_BUILD_ROOT%{_appdir}/files
 ln -s htdocs/misc $RPM_BUILD_ROOT%{_appdir}
 
 # install themes
-cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
-# move .xtmpl/.theme out of htdocs
-(cd $RPM_BUILD_ROOT%{_appdir}/htdocs && tar cf - --remove-files themes/*/*.{xtmpl,theme}) | tar -xf - -C $RPM_BUILD_ROOT%{_appdir}
-mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
-# make screenshot.png available in appdir
-for a in $RPM_BUILD_ROOT%{_appdir}/htdocs/themes/*; do
-	t=$(basename $a)
-	ln -s ../../htdocs/themes/$t/screenshot.png $RPM_BUILD_ROOT%{_appdir}/themes/$t
-done
+install_theme() {
+set -x
+	local theme=$1
+	local appdir=$RPM_BUILD_ROOT%{_appdir}
+	local themedir=$appdir/htdocs/themes
+	local themedir_shadow=$appdir/themes
 
-# a hack
-s=themes/chameleon/marvin
-ln -s ../../htdocs/$s $RPM_BUILD_ROOT%{_appdir}/$s
+	install -d $themedir/$theme
+	cp -a themes/$theme/*.* $themedir/$theme
+	if [ -f themes/$theme/*.theme ]; then
+		install -d $themedir_shadow/$theme
+		mv $themedir/$theme/*.theme $themedir_shadow/$theme
+		ln -s ../../htdocs/themes/$theme/screenshot.png $themedir_shadow/$theme
+	else
+		if [[ $theme = */* ]]; then
+			ln -s ../../htdocs/themes/$theme $themedir_shadow/$theme
+		else
+			ln -s ../htdocs/themes/$theme $themedir_shadow/$theme
+		fi
+	fi
+}
+
+install -d $RPM_BUILD_ROOT%{_appdir}/{themes,htdocs/themes}
+install_theme bluemarine
+install_theme chameleon
+install_theme chameleon/marvin
+install_theme pushbutton
+cp -a themes/engines $RPM_BUILD_ROOT%{_appdir}/themes
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
@@ -214,14 +231,23 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+if [ "$1" = 1 ]; then
+%banner -e %{name} <<'EOF'
+If this is your first install of Drupal, You need at least configure
+$db_url and $base_url in %{_sysconfdir}/sites/default/settings.php
+
+EOF
+fi
+
 %post db-mysql
 if [ "$1" = 1 ]; then
-%banner -e %{name}-db-mysql <<EOF
+%banner -e %{name}-db-mysql <<'EOF'
 If this is your first install of Drupal, you need to create Drupal database:
 
 mysqladmin create drupal
 zcat %{_docdir}/%{name}-db-mysql-%{version}/database.mysql.gz | mysql drupal
-mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON drupal.* TO 'drupal'@'localhost' IDENTIFIED BY 'PASSWORD'"
+mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON drupal.* TO 'drupal'@'localhost' IDENTIFIED BY 'password'"
 mysql -e "GRANT CREATE TEMPORARY TABLES, LOCK TABLES ON *.* TO 'drupal'@'localhost'"
 
 EOF
@@ -229,7 +255,7 @@ fi
 
 %post db-pgsql
 if [ "$1" = 1 ]; then
-%banner -e %{name}-db-pgsql <<EOF
+%banner -e %{name}-db-pgsql <<'EOF'
 If this is your first install of Drupal, you need to create Drupal database:
 
 and import initial schema from
@@ -335,7 +361,7 @@ fi
 %files cron
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}
-%{_appdir}/cron.php
+%attr(775,root,root) %{_appdir}/cron.php
 
 %files db-mysql
 %defattr(644,root,root,755)
