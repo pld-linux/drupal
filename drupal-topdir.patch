@@ -18,3 +18,13 @@
  include_once './includes/bootstrap.inc';
  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
  include_once './includes/xmlrpc.inc';
+--- drupal-4.7.0-beta2/update.php~	2005-12-16 15:23:27.000000000 +0200
++++ drupal-4.7.0-beta2/update.php	2005-12-30 18:14:14.000000000 +0200
+@@ -486,6 +486,7 @@
+ </ol>';
+ }
+ 
++chdir('..');
+ include_once './includes/bootstrap.inc';
+ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+ drupal_maintenance_theme();
