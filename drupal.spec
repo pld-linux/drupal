@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.5
-Release:	0.11
+Release:	0.12
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -18,6 +18,7 @@ Patch4:		%{name}-emptypass.patch
 Patch5:		%{name}-cron.patch
 Patch6:		%{name}-19298-cache.patch
 Patch7:		%{name}-update-cli.patch
+Patch8:		%{name}-locale-memory.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
@@ -170,6 +171,7 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch5 -p1
 %patch6 -p0
 %patch7 -p1
+%patch8 -p1
 
 find -name '*~' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
@@ -292,14 +294,10 @@ if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
 fi
 
 if [ "$httpd_reload" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd reload 1>&2
-	fi
+	%service httpd reload
 fi
 if [ "$apache_reload" ]; then
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache reload 1>&2
-	fi
+	%service apache reload
 fi
 
 %files
