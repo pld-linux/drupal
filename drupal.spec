@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.6.5
-Release:	0.14
+Release:	0.15
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -35,6 +35,7 @@ Requires:	php-pcre
 Requires:	php-xml
 Requires:	webapps
 Requires:	webserver = apache
+Obsoletes:	drupal-update
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -138,14 +139,6 @@ UWAGA: Ten sterownik nie by³ testowany w PLD i nie wszystkie modu³y
 maj± schematy bazy danych dla PostgreSQL-a. Mo¿na go u¿ywaæ na w³asne
 ryzyko.
 
-%package update
-Summary:	Package to perform Drupal database updates
-Group:		Applications/WWW
-Requires:	%{name} = %{version}-%{release}
-
-%description update
-This package contains scripts needed to do database updates via web.
-
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
 Summary(pl):	Serwer XMLRPC dla Drupala
@@ -185,10 +178,10 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,/var/{cache,lib}/%{name}} 
 
 cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
-cp -a update.php xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a database/updates.inc $RPM_BUILD_ROOT%{_appdir}/database
 
-cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
+cp -a cron.php update.php $RPM_BUILD_ROOT%{_appdir}
 cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
 cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
@@ -315,12 +308,14 @@ fi
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sites/default/*
 
 %dir %{_appdir}
+%{_appdir}/database
 %{_appdir}/includes
 %{_appdir}/modules
 %{_appdir}/scripts
 %{_appdir}/themes
 %{_appdir}/po
-# symlink
+%{_appdir}/update.php
+# symlinks
 %{_appdir}/files
 %{_appdir}/misc
 
@@ -347,11 +342,6 @@ fi
 %files db-pgsql
 %defattr(644,root,root,755)
 %doc database/*.pgsql
-
-%files update
-%defattr(644,root,root,755)
-%{_appdir}/htdocs/update.php
-%{_appdir}/database
 
 %files xmlrpc
 %defattr(644,root,root,755)
