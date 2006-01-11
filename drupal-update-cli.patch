@@ -66,3 +66,19 @@
  if (isset($_GET["op"])) {
    include_once "includes/bootstrap.inc";
    include_once "includes/common.inc";
+--- drupal-4.6.5/update.php~	2006-01-11 21:39:09.000000000 +0200
++++ drupal-4.6.5/update.php	2006-01-11 21:39:11.000000000 +0200
+@@ -12,6 +12,13 @@
+  * check statement below. Change the TRUE into a FALSE to disable the access
+  * check. After finishing the upgrade, be sure to open this file and change the
+  * FALSE back into a TRUE!
++ *
++ * PLD Linux notes:
++ * You will need to copy this file to htdocs dir to run it from web and add
++ * chdir('..'); before first include_once statement.
++ *
++ * You can also run this script from CLI (which is preffered way in PLD Linux):
++ * # php update.php
+  */
+ 
+ // Disable access checking?
