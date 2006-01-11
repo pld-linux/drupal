@@ -1,8 +1,10 @@
+%define		_ver		4.6
+%define		_patchlevel	5
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
-Version:	4.6.5
-Release:	0.15
+Version:	%{_ver}.%{_patchlevel}
+Release:	0.20
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -24,6 +26,7 @@ URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
 Requires:	%{name}(DB_Driver) = %{version}-%{release}
+Requires:	%{name}(theme) = %{_ver}
 Requires:	apache(mod_access)
 Requires:	apache(mod_alias)
 Requires:	apache(mod_dir)
@@ -138,6 +141,15 @@ Drupala.
 UWAGA: Ten sterownik nie by³ testowany w PLD i nie wszystkie modu³y
 maj± schematy bazy danych dla PostgreSQL-a. Mo¿na go u¿ywaæ na w³asne
 ryzyko.
+
+%package themes
+Summary:	Themes distributed with Drupal
+Group:		Applications/WWW
+Requires:	%{name} = %{version}-%{release}
+Provides:	drupal(theme) = %{_ver}
+
+%description themes
+This package contains themes distributed with Drupal.
 
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
@@ -312,7 +324,7 @@ fi
 %{_appdir}/includes
 %{_appdir}/modules
 %{_appdir}/scripts
-%{_appdir}/themes
+%dir %{_appdir}/themes
 %{_appdir}/po
 %{_appdir}/update.php
 # symlinks
@@ -323,7 +335,7 @@ fi
 %{_appdir}/htdocs/*.ico
 %{_appdir}/htdocs/index.php
 %{_appdir}/htdocs/misc
-%{_appdir}/htdocs/themes
+%dir %{_appdir}/htdocs/themes
 %{_appdir}/htdocs/modules
 
 %dir %attr(775,root,http) /var/lib/%{name}
@@ -342,6 +354,11 @@ fi
 %files db-pgsql
 %defattr(644,root,root,755)
 %doc database/*.pgsql
+
+%files themes
+%defattr(644,root,root,755)
+%{_appdir}/themes/*
+%{_appdir}/htdocs/themes/*
 
 %files xmlrpc
 %defattr(644,root,root,755)
