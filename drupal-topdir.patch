@@ -18,13 +18,3 @@
  include_once 'includes/bootstrap.inc';
  include_once 'includes/common.inc';
  include_once 'includes/xmlrpc.inc';
---- drupal-4.6.5/update.php~	2005-04-06 22:04:02.000000000 +0300
-+++ drupal-4.6.5/update.php	2005-12-20 17:27:53.000000000 +0200
-@@ -21,6 +21,7 @@
-   set_time_limit(180);
- }
- 
-+chdir('..');
- include_once "database/updates.inc";
- 
- function update_data($start) {
