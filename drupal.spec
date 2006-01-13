@@ -144,12 +144,16 @@ ryzyko.
 
 %package themes
 Summary:	Themes distributed with Drupal
+Summary(pl):	Motywy rozprowadzane z Drupalem
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Provides:	drupal(theme) = %{_ver}
 
 %description themes
 This package contains themes distributed with Drupal.
+
+%description themes -l pl
+Ten pakiet zawiera motywy rozprowadzane z Drupalem.
 
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
