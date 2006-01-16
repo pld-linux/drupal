@@ -4,7 +4,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	0.21
+Release:	0.23
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -331,6 +331,7 @@ fi
 %{_appdir}/modules
 %{_appdir}/scripts
 %dir %{_appdir}/themes
+%dir %{_appdir}/themes/engines
 %{_appdir}/po
 %{_appdir}/update.php
 # symlinks
@@ -365,7 +366,8 @@ fi
 
 %files themes
 %defattr(644,root,root,755)
-%{_appdir}/themes/*
+%{_appdir}/themes/[!e]*
+%{_appdir}/themes/engines/*
 %{_appdir}/htdocs/themes/*
 
 %files xmlrpc
