@@ -28,7 +28,7 @@
  
 +// If not in 'safe mode', increase the memory limit
 +if (!ini_get('safe_mode')) {
-+  ini_set('memory_limit', '12M');
++  ini_set('memory_limit', '20M');
 +}
 +
  include_once 'includes/bootstrap.inc';
