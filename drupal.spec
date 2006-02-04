@@ -1,13 +1,14 @@
-%define	_beta	beta2
+%define	_beta	beta4
+%define	_rel 0.1
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.7.0
-Release:	0.%{_beta}.13
+Release:	0.%{_beta}.%{_rel}
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}-%{_beta}.tar.gz
-# Source0-md5:	0b6d8fd9bd08e7651cf91ff2e95c1c31
+# Source0-md5:	a9fad8e4235d267a65b9dc02b62d0588
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
@@ -16,8 +17,8 @@ Patch1:		%{name}-sitesdir.patch
 Patch2:		%{name}-topdir.patch
 Patch3:		%{name}-themedir2.patch
 #Patch4:	%{name}-emptypass.patch
-Patch5:	%{name}-cron.patch
-Patch6:	%{name}-mysql.patch
+Patch5:		%{name}-cron.patch
+Patch6:		%{name}-mysql.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
