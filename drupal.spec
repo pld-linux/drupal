@@ -305,10 +305,10 @@ if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
 fi
 
 if [ "$httpd_reload" ]; then
-	%service httpd reload
+	%service -q httpd reload
 fi
 if [ "$apache_reload" ]; then
-	%service apache reload
+	%service -q apache reload
 fi
 
 %files
