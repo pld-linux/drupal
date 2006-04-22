@@ -1,14 +1,14 @@
-%define	_beta	beta4
+%define	_rc	rc3
 %define	_rel 0.1
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	4.7.0
-Release:	0.%{_beta}.%{_rel}
+Release:	0.%{_rc}.%{_rel}
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://drupal.org/files/projects/%{name}-%{version}-%{_beta}.tar.gz
-# Source0-md5:	a9fad8e4235d267a65b9dc02b62d0588
+Source0:	http://drupal.org/files/projects/%{name}-%{version}-%{_rc}.tar.gz
+# Source0-md5:	3be884105541809ecc610fed45ccf368
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
@@ -18,7 +18,6 @@ Patch2:		%{name}-topdir.patch
 Patch3:		%{name}-themedir2.patch
 #Patch4:	%{name}-emptypass.patch
 Patch5:		%{name}-cron.patch
-Patch6:		%{name}-mysql.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
@@ -162,14 +161,13 @@ danymi uwierzytelniaj±cymi u¿ytkownika danego Drupala - jest to
 nazywane rozproszonym uwierzytelnianiem.
 
 %prep
-%setup -q %{?_beta:-n %{name}-%{version}-%{_beta}}
+%setup -q %{?_rc:-n %{name}-%{version}-%{_rc}}
 #%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 #%patch4 -p1
 %patch5 -p1
-%patch6 -p1
 
 find -name '*~' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
