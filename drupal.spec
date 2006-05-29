@@ -4,7 +4,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -310,6 +310,18 @@ fi
 if [ "$apache_reload" ]; then
 	%service -q apache reload
 fi
+
+%triggerpostun -- %{name} < 4.6.7-2.6
+grep -c This_is_a_Drupal_security_line_do_not_remove \
+%{_sysconfdir}/apache.conf %{_sysconfdir}/httpd.conf \
+| awk -F: '/:0/{print $1}' | xargs -r \
+sed -i -e '
+/<Directory \/var\/lib\/drupal>/{
+	n
+	a\	SetHandler This_is_a_Drupal_security_line_do_not_remove
+}'
+[ ! -L /etc/httpd/webapps.d/drupal.conf ] || %service -q httpd reload
+[ ! -L /etc/apache/webapps.d/drupal.conf ] || %service -q apache reload
 
 %files
 %defattr(644,root,root,755)
