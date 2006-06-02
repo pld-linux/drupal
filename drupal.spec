@@ -1,14 +1,14 @@
 %define		_ver		4.6
-%define		_patchlevel	7
+%define		_patchlevel	8
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	3
+Release:	1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	8c15ded4450a1afcf0c5b6593dc74541
+# Source0-md5:	ffc5bf145f7cb6bb56fb50396cc76dd2
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
@@ -311,14 +311,31 @@ if [ "$apache_reload" ]; then
 	%service -q apache reload
 fi
 
-%triggerpostun -- %{name} < 4.6.7-2.6
-grep -c This_is_a_Drupal_security_line_do_not_remove \
+%triggerpostun -- %{name} < 4.6.8-0.5
+grep -l 'This_is_a_Drupal_security_line_do_not_remove' \
+%{_sysconfdir}/apache.conf %{_sysconfdir}/httpd.conf \
+| xargs -r \
+sed -i -e '
+/This_is_a_Drupal_security_line_do_not_remove/{
+	d
+	n
+	a\	SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
+	a\	Options None
+	a\	<IfModule mod_rewrite.c>
+	a\	\	RewriteEngine off
+	a\	</IfModule>
+}'
+egrep -c 'Drupal_Security_Do_Not_Remove_See_SA_2006_006' \
 %{_sysconfdir}/apache.conf %{_sysconfdir}/httpd.conf \
 | awk -F: '/:0/{print $1}' | xargs -r \
 sed -i -e '
 /<Directory \/var\/lib\/drupal>/{
 	n
-	a\	SetHandler This_is_a_Drupal_security_line_do_not_remove
+	a\	SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
+	a\	Options None
+	a\	<IfModule mod_rewrite.c>
+	a\	\	RewriteEngine off
+	a\	</IfModule>
 }'
 [ ! -L /etc/httpd/webapps.d/drupal.conf ] || %service -q httpd reload
 [ ! -L /etc/apache/webapps.d/drupal.conf ] || %service -q apache reload
