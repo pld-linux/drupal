@@ -185,6 +185,7 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch9 -p1
 
 find -name '*~' | xargs -r rm -v
+find -name '*.orig' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
 
 %install
