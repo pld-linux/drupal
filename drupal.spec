@@ -4,7 +4,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -184,9 +184,10 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch8 -p1
 %patch9 -p1
 
-find -name '*~' | xargs -r rm -v
-find -name '*.orig' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
+
+# remove backups from patching as we use globs to package files to buildroot
+find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
