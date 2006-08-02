@@ -1,14 +1,14 @@
 %define		_ver		4.6
-%define		_patchlevel	8
+%define		_patchlevel	9
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	2
+Release:	1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	ffc5bf145f7cb6bb56fb50396cc76dd2
+# Source0-md5:	31573869c0e56de6329ee7d68429917c
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
