@@ -4,7 +4,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -32,12 +32,12 @@ Requires:	apache(mod_alias)
 Requires:	apache(mod_dir)
 Requires:	apache(mod_expires)
 Requires:	apache(mod_rewrite)
-Requires:	php >= 3:4.3.3
-Requires:	php-mysql
-Requires:	php-pcre
-Requires:	php-xml
+Requires:	php(mysql)
+Requires:	php(pcre)
+Requires:	php(xml)
 Requires:	webapps
 Requires:	webserver = apache
+Requires:	webserver(php) >= 4.3.3
 Obsoletes:	drupal-update
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -112,7 +112,7 @@ Ten pakiet zawiera skrypt wywo³uj±cy uchwyty crona dla Drupala.
 Summary:	Drupal DB Driver for MySQL
 Summary(pl):	Sterownik bazy danych MySQL dla Drupala
 Group:		Applications/WWW
-Requires:	php-mysql
+Requires:	php(mysql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
 
 %description db-mysql
@@ -125,7 +125,7 @@ Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla Drupala.
 Summary:	Drupal DB Driver for PostgreSQL
 Summary(pl):	Sterownik bazy danych PostgreSQL dla Drupala
 Group:		Applications/WWW
-Requires:	php-pgsql
+Requires:	php(pgsql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
 
 %description db-pgsql
