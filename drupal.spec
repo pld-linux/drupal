@@ -234,7 +234,7 @@ rm -rf $RPM_BUILD_ROOT
 %post
 # Perform database updates
 echo 'Performing Drupal database updates'
-%{_bindir}/php %{_appdir}/update.php Update
+cd %{_appdir} && %{_bindir}/php update.php Update
 echo 'Done'
 
 %post db-mysql
