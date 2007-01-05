@@ -152,21 +152,21 @@
  
    $output .= form_group(t('Cache settings'), $group);
  
---- database/updates.inc~	2005-12-20 17:03:28.000000000 +0200
-+++ database/updates.inc	2005-12-20 17:07:37.000000000 +0200
-@@ -108,6 +108,7 @@ $sql_updates = array(
+--- database/updates.inc	2005-12-20 17:07:37.000000000 +0200
++++ database/updates.inc	2007-01-05 03:24:26.265230942 +0200
+@@ -108,6 +108,7 @@
    "2005-04-14" => "update_129",
    "2005-05-06" => "update_130",
-   "2005-05-07" => "update_131"
-+,  "2005-12-20" => "update_132"
+   "2005-05-07" => "update_131",
++  "2005-12-20" => "update_cache_1",
+   "2006-12-19" => "update_132",
  );
  
- function update_32() {
-@@ -2394,6 +2395,17 @@ function update_131() {
+@@ -2395,6 +2396,17 @@
    return $ret;
  }
  
-+function update_132() {
++function update_cache_1() {
 +  $ret = array();
 +  if ($GLOBALS['db_type'] == 'mysql') {
 +    $ret[] = update_sql("ALTER TABLE sessions ADD cache int(11) NOT NULL default '0' AFTER timestamp");
