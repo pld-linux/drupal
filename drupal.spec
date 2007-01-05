@@ -1,14 +1,14 @@
 %define		_ver		4.6
-%define		_patchlevel	10
+%define		_patchlevel	11
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	2
+Release:	1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	c96eef1d33b5bac9526b3b1d6fc5b556
+# Source0-md5:	cfa5777fb6a612addcee75dad132909e
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
@@ -27,6 +27,7 @@ BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
 Requires:	%{name}(DB_Driver) = %{version}-%{release}
 Requires:	%{name}(theme) = %{_ver}
+Requires:	/usr/bin/php
 Requires:	apache(mod_access)
 Requires:	apache(mod_alias)
 Requires:	apache(mod_dir)
@@ -229,6 +230,12 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+# Perform database updates
+echo 'Performing Drupal database updates'
+%{_bindir}/php %{_appdir}/update.php Update
+echo 'Done'
 
 %post db-mysql
 if [ "$1" = 1 ]; then
