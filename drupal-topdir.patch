@@ -1,5 +1,5 @@
---- ./index.php~	2005-12-09 16:03:31.000000000 +0200
-+++ ./index.php	2005-12-09 16:04:54.000000000 +0200
+--- drupal-5.0/index.php~	2007-01-26 13:07:22.769199912 +0200
++++ drupal-5.0/index.php	2007-01-26 13:07:59.610031940 +0200
 @@ -9,6 +9,7 @@
   * prints the appropriate page.
   */
@@ -8,8 +8,8 @@
  require_once './includes/bootstrap.inc';
  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
  
---- ./xmlrpc.php~	2005-12-09 16:03:31.000000000 +0200
-+++ ./xmlrpc.php	2005-12-09 16:05:14.000000000 +0200
+--- drupal-5.0/xmlrpc.php~	2007-01-26 13:08:33.010786268 +0200
++++ drupal-5.0/xmlrpc.php	2007-01-26 13:08:53.461248124 +0200
 @@ -6,6 +6,7 @@
   * PHP page for handling incoming XML-RPC requests from clients.
   */
@@ -18,13 +18,3 @@
  include_once './includes/bootstrap.inc';
  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
  include_once './includes/xmlrpc.inc';
---- drupal-4.7.0-beta2/update.php~	2005-12-16 15:23:27.000000000 +0200
-+++ drupal-4.7.0-beta2/update.php	2005-12-30 18:14:14.000000000 +0200
-@@ -486,6 +486,7 @@
- </ol>';
- }
- 
-+chdir('..');
- include_once './includes/bootstrap.inc';
- drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
- drupal_maintenance_theme();
