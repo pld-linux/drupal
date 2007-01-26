@@ -1,14 +1,12 @@
-%define	_rc	rc3
-%define	_rel 0.1
 Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
-Version:	4.7.0
-Release:	0.%{_rc}.%{_rel}
+Version:	5.0
+Release:	0.1
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://drupal.org/files/projects/%{name}-%{version}-%{_rc}.tar.gz
-# Source0-md5:	3be884105541809ecc610fed45ccf368
+Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/drupal-5.0.tar.gz
+# Source0-md5:	2e1d7573d21b8c97b02b63e28d356200
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
@@ -17,7 +15,6 @@ Patch1:		%{name}-sitesdir.patch
 Patch2:		%{name}-topdir.patch
 Patch3:		%{name}-themedir2.patch
 #Patch4:	%{name}-emptypass.patch
-Patch5:		%{name}-cron.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
@@ -167,7 +164,6 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch2 -p1
 %patch3 -p1
 #%patch4 -p1
-%patch5 -p1
 
 find -name '*~' | xargs -r rm -v
 cp -p %{SOURCE3} README.PLD
@@ -179,10 +175,9 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,/var/{cache,lib}/%{name}} 
 
 cp -a index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
-cp -a update.php xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
-cp -a database/updates.inc $RPM_BUILD_ROOT%{_appdir}/database
+cp -a install.php update.php xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 
-install cron.php $RPM_BUILD_ROOT%{_appdir}
+cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
 cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
 cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
@@ -275,57 +270,6 @@ fi
 %triggerun -- apache >= 2.0.0
 %webapp_unregister httpd %{_webapp}
 
-%triggerpostun -- %{name} < 4.6.4-0.4
-# rescue app configs.
-if [ -f /etc/drupal/sites/default/settings.php.rpmsave ]; then
-	mv -f %{_sysconfdir}/sites/default/settings.php{,.rpmnew}
-	mv -f /etc/drupal/sites/default/settings.php.rpmsave %{_sysconfdir}/sites/default/settings.php
-fi
-# other configured sites, if any
-for i in /etc/drupal/sites/*; do
-	d=$(basename $i)
-	[ "$d" = "default" ] && continue
-	mv -f %{_sysconfdir}/sites/$d{,.rpmnew}
-	mv -f $i %{_sysconfdir}/sites/$d
-done
-
-# migrate from apache-config macros
-if [ -f /etc/drupal/apache.conf.rpmsave ]; then
-	if [ -d /etc/apache/webapps.d ]; then
-		cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
-		cp -f /etc/drupal/apache.conf.rpmsave %{_sysconfdir}/apache.conf
-	fi
-
-	if [ -d /etc/httpd/webapps.d ]; then
-		cp -f %{_sysconfdir}/httpd.conf{,.rpmnew}
-		cp -f /etc/drupal/apache.conf.rpmsave %{_sysconfdir}/httpd.conf
-	fi
-	rm -f /etc/drupal/apache.conf.rpmsave
-fi
-
-# place new config location, as trigger puts config only on first install, do it here.
-if [ -L /etc/apache/conf.d/99_%{name}.conf ]; then
-	rm -f /etc/apache/conf.d/99_%{name}.conf
-	/usr/sbin/webapp register apache %{_webapp}
-	apache_reload=1
-fi
-if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
-	rm -f /etc/httpd/httpd.conf/99_%{name}.conf
-	/usr/sbin/webapp register httpd %{_webapp}
-	httpd_reload=1
-fi
-
-if [ "$httpd_reload" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd reload 1>&2
-	fi
-fi
-if [ "$apache_reload" ]; then
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache reload 1>&2
-	fi
-fi
-
 %files
 %defattr(644,root,root,755)
 %doc *.txt README.PLD
@@ -337,6 +281,8 @@ fi
 %attr(750,root,http) %dir %{_sysconfdir}/sites
 %attr(750,root,http) %dir %{_sysconfdir}/sites/default
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sites/default/*
+%attr(750,root,http) %dir %{_sysconfdir}/sites/all
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sites/all/*
 
 %dir %{_appdir}
 %{_appdir}/includes
@@ -350,6 +296,7 @@ fi
 
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/index.php
+%{_appdir}/htdocs/install.php
 %{_appdir}/htdocs/misc
 %{_appdir}/htdocs/themes
 %{_appdir}/htdocs/modules
@@ -364,12 +311,10 @@ fi
 
 %files db-mysql
 %defattr(644,root,root,755)
-%doc database/*.mysql
 #%doc README.replication
 
 %files db-pgsql
 %defattr(644,root,root,755)
-%doc database/*.pgsql
 
 %files update
 %defattr(644,root,root,755)
