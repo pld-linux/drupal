@@ -1,12 +1,11 @@
-diff -ur ./includes/bootstrap.inc ../drupal1/includes/bootstrap.inc
---- ./includes/bootstrap.inc	2005-04-05 22:00:24.000000000 +0300
-+++ ./drupal1/includes/bootstrap.inc	2005-05-19 18:20:06.845355509 +0300
-@@ -48,7 +48,7 @@
+--- drupal-5.0/includes/bootstrap.inc~	2007-01-26 13:05:53.697188263 +0200
++++ drupal-5.0/includes/bootstrap.inc	2007-01-26 13:06:43.528313680 +0200
+@@ -199,7 +199,7 @@
      return $conf;
    }
  
 -  $confdir = 'sites';
 +  $confdir = '/etc/webapps/drupal/sites';
-   $uri = explode('/', $_SERVER['PHP_SELF']);
-   $server = explode('.', rtrim($_SERVER['HTTP_HOST'], '.'));
+   $uri = explode('/', $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_FILENAME']);
+   $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
    for ($i = count($uri) - 1; $i > 0; $i--) {
