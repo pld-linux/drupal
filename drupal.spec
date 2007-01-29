@@ -2,10 +2,10 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	5.0
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/drupal-5.0.tar.gz
+Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/%{name}-%{version}.tar.gz
 # Source0-md5:	2e1d7573d21b8c97b02b63e28d356200
 Source1:	%{name}.conf
 Source2:	%{name}.cron
@@ -24,13 +24,13 @@ Requires:	apache(mod_alias)
 Requires:	apache(mod_dir)
 Requires:	apache(mod_expires)
 Requires:	apache(mod_rewrite)
-Requires:	php >= 3:4.3.3
-Requires:	php-mbstring
-Requires:	php-mysql
-Requires:	php-pcre
-Requires:	php-xml
+Requires:	php(mbstring)
+Requires:	php(mysql)
+Requires:	php(pcre)
+Requires:	php(xml)
 Requires:	webapps
 Requires:	webserver = apache
+Requires:	webserver(php) >= 4.3.3
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -103,7 +103,7 @@ Ten pakiet zawiera skrypt wywo³uj±cy uchwyty crona dla Drupala.
 Summary:	Drupal DB Driver for MySQL
 Summary(pl):	Sterownik bazy danych MySQL dla Drupala
 Group:		Applications/WWW
-Requires:	php-mysql
+Requires:	php(mysql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
 
 %description db-mysql
@@ -116,7 +116,7 @@ Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla Drupala.
 Summary:	Drupal DB Driver for PostgreSQL
 Summary(pl):	Sterownik bazy danych PostgreSQL dla Drupala
 Group:		Applications/WWW
-Requires:	php-pgsql
+Requires:	php(pgsql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
 
 %description db-pgsql
