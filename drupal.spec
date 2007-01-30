@@ -4,7 +4,7 @@ Summary:	Open source content management platform
 Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -99,9 +99,7 @@ Summary:	Drupal cron
 Summary(pl):	Us³uga cron dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Requires:	/usr/bin/php
 Requires:	crondaemon
-Requires:	php-cli >= 3:4.3.3
 
 %description cron
 This package contains script which invokes cron hooks for Drupal.
@@ -200,7 +198,8 @@ cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a database/updates.inc $RPM_BUILD_ROOT%{_appdir}/database
 
-cp -a cron.php update.php $RPM_BUILD_ROOT%{_appdir}
+cp -a update.php $RPM_BUILD_ROOT%{_appdir}
+install cron.php $RPM_BUILD_ROOT%{_appdir}
 cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
 cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
@@ -389,7 +388,7 @@ sed -i -e '
 %files cron
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}
-%{_appdir}/cron.php
+%attr(755,root,root) %{_appdir}/cron.php
 
 %files db-mysql
 %defattr(644,root,root,755)
