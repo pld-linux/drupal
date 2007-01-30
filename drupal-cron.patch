@@ -20,9 +20,14 @@
      $result = db_query("SELECT u.* FROM {users} u WHERE u.uid = 0");
    }
  
---- ./cron.php~	2005-01-09 11:22:38.000000000 +0200
-+++ ./cron.php	2005-12-09 20:13:27.000000000 +0200
-@@ -6,6 +6,11 @@
+--- ./cron.php	2005-12-09 20:13:27.000000000 +0200
++++ drupal-4.6.11/cron.php	2007-01-30 18:02:41.911795649 +0200
+@@ -1,3 +1,4 @@
++#!/usr/bin/php
+ <?php
+ // $Id$
+ 
+@@ -6,6 +7,13 @@
   * Handles incoming requests to fire off regularly-scheduled tasks (cron jobs).
   */
  
@@ -30,6 +35,8 @@
 +if (!ini_get('safe_mode')) {
 +  ini_set('memory_limit', '20M');
 +}
++
++chdir(dirname(__FILE__));
 +
  include_once 'includes/bootstrap.inc';
  include_once 'includes/common.inc' ;
