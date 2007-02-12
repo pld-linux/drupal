@@ -1,7 +1,7 @@
 %define		_ver		4.6
 %define		_patchlevel	11
 Summary:	Open source content management platform
-Summary(pl.UTF-8):   Platforma do zarządzania treścią o otwartych źródłach
+Summary(pl.UTF-8):	Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
 Release:	2
@@ -96,7 +96,7 @@ i wiele więcej.
 
 %package cron
 Summary:	Drupal cron
-Summary(pl.UTF-8):   Usługa cron dla Drupala
+Summary(pl.UTF-8):	Usługa cron dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -109,7 +109,7 @@ Ten pakiet zawiera skrypt wywołujący uchwyty crona dla Drupala.
 
 %package db-mysql
 Summary:	Drupal DB Driver for MySQL
-Summary(pl.UTF-8):   Sterownik bazy danych MySQL dla Drupala
+Summary(pl.UTF-8):	Sterownik bazy danych MySQL dla Drupala
 Group:		Applications/WWW
 Requires:	php(mysql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
@@ -122,7 +122,7 @@ Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla Drupala.
 
 %package db-pgsql
 Summary:	Drupal DB Driver for PostgreSQL
-Summary(pl.UTF-8):   Sterownik bazy danych PostgreSQL dla Drupala
+Summary(pl.UTF-8):	Sterownik bazy danych PostgreSQL dla Drupala
 Group:		Applications/WWW
 Requires:	php(pgsql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
@@ -143,7 +143,7 @@ ryzyko.
 
 %package themes
 Summary:	Themes distributed with Drupal
-Summary(pl.UTF-8):   Motywy rozprowadzane z Drupalem
+Summary(pl.UTF-8):	Motywy rozprowadzane z Drupalem
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Provides:	drupal(theme) = %{_ver}
@@ -156,7 +156,7 @@ Ten pakiet zawiera motywy rozprowadzane z Drupalem.
 
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
-Summary(pl.UTF-8):   Serwer XMLRPC dla Drupala
+Summary(pl.UTF-8):	Serwer XMLRPC dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
