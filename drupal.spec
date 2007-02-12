@@ -1,7 +1,7 @@
 %define		_ver		4.6
 %define		_patchlevel	11
 Summary:	Open source content management platform
-Summary(pl):	Platforma do zarz±dzania tre¶ci± o otwartych ¼ród³ach
+Summary(pl.UTF-8):   Platforma do zarzÄ…dzania treÅ›ciÄ… o otwartych ÅºrÃ³dÅ‚ach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
 Release:	2
@@ -71,32 +71,32 @@ Drupal includes features to enable
 
 and much more.
 
-%description -l pl
-Drupal to oprogramowanie pozwalaj±ce osobie lub spo³eczno¶ci
-u¿ytkowników na ³atwe publikowanie, zarz±dzanie i organizowanie ró¿nej
-tre¶ci na stronie WWW. Dziesi±tki tysiêcy ludzi i organizacji u¿ywali
-Drupala do ustawiania wyników ró¿nych rodzajów stron WWW, w tym:
-- portale WWW i strony dyskusyjne spo³eczno¶ci
+%description -l pl.UTF-8
+Drupal to oprogramowanie pozwalajÄ…ce osobie lub spoÅ‚ecznoÅ›ci
+uÅ¼ytkownikÃ³w na Å‚atwe publikowanie, zarzÄ…dzanie i organizowanie rÃ³Å¼nej
+treÅ›ci na stronie WWW. DziesiÄ…tki tysiÄ™cy ludzi i organizacji uÅ¼ywali
+Drupala do ustawiania wynikÃ³w rÃ³Å¼nych rodzajÃ³w stron WWW, w tym:
+- portale WWW i strony dyskusyjne spoÅ‚ecznoÅ›ci
 - korporacyjne strony WWW/portale intranetowe
 - osobiste strony WWW
-- strony mi³o¶ników
+- strony miÅ‚oÅ›nikÃ³w
 - aplikacje e-commerce
-- s³owniki zasobów
+- sÅ‚owniki zasobÃ³w
 
-Drupal zawiera zasoby umo¿liwiaj±ce tworzenie:
-- systemów zarz±dzania tre¶ci±
-- blogów
-- ¶rodowisk pracy grupowej
-- forów
+Drupal zawiera zasoby umoÅ¼liwiajÄ…ce tworzenie:
+- systemÃ³w zarzÄ…dzania treÅ›ciÄ…
+- blogÃ³w
+- Å›rodowisk pracy grupowej
+- forÃ³w
 - nowin
-- galerii zdjêæ
-- wrzucania i ¶ci±gania plików
+- galerii zdjÄ™Ä‡
+- wrzucania i Å›ciÄ…gania plikÃ³w
 
-i wiele wiêcej.
+i wiele wiÄ™cej.
 
 %package cron
 Summary:	Drupal cron
-Summary(pl):	Us³uga cron dla Drupala
+Summary(pl.UTF-8):   UsÅ‚uga cron dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -104,12 +104,12 @@ Requires:	crondaemon
 %description cron
 This package contains script which invokes cron hooks for Drupal.
 
-%description cron -l pl
-Ten pakiet zawiera skrypt wywo³uj±cy uchwyty crona dla Drupala.
+%description cron -l pl.UTF-8
+Ten pakiet zawiera skrypt wywoÅ‚ujÄ…cy uchwyty crona dla Drupala.
 
 %package db-mysql
 Summary:	Drupal DB Driver for MySQL
-Summary(pl):	Sterownik bazy danych MySQL dla Drupala
+Summary(pl.UTF-8):   Sterownik bazy danych MySQL dla Drupala
 Group:		Applications/WWW
 Requires:	php(mysql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
@@ -117,12 +117,12 @@ Provides:	%{name}(DB_Driver) = %{version}-%{release}
 %description db-mysql
 This virtual package provides MySQL database backend for Drupal.
 
-%description db-mysql -l pl
+%description db-mysql -l pl.UTF-8
 Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla Drupala.
 
 %package db-pgsql
 Summary:	Drupal DB Driver for PostgreSQL
-Summary(pl):	Sterownik bazy danych PostgreSQL dla Drupala
+Summary(pl.UTF-8):   Sterownik bazy danych PostgreSQL dla Drupala
 Group:		Applications/WWW
 Requires:	php(pgsql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
@@ -133,17 +133,17 @@ This virtual package provides PostgreSQL database backend for Drupal.
 NOTE: This driver is not tested in PLD, and not all modules have
 database schema for PostgreSQL. Use this driver at your own risk!
 
-%description db-pgsql -l pl
+%description db-pgsql -l pl.UTF-8
 Ten wirtualny pakiet dostarcza backend bazy danych PostgreSQL dla
 Drupala.
 
-UWAGA: Ten sterownik nie by³ testowany w PLD i nie wszystkie modu³y
-maj± schematy bazy danych dla PostgreSQL-a. Mo¿na go u¿ywaæ na w³asne
+UWAGA: Ten sterownik nie byÅ‚ testowany w PLD i nie wszystkie moduÅ‚y
+majÄ… schematy bazy danych dla PostgreSQL-a. MoÅ¼na go uÅ¼ywaÄ‡ na wÅ‚asne
 ryzyko.
 
 %package themes
 Summary:	Themes distributed with Drupal
-Summary(pl):	Motywy rozprowadzane z Drupalem
+Summary(pl.UTF-8):   Motywy rozprowadzane z Drupalem
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Provides:	drupal(theme) = %{_ver}
@@ -151,12 +151,12 @@ Provides:	drupal(theme) = %{_ver}
 %description themes
 This package contains themes distributed with Drupal.
 
-%description themes -l pl
+%description themes -l pl.UTF-8
 Ten pakiet zawiera motywy rozprowadzane z Drupalem.
 
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
-Summary(pl):	Serwer XMLRPC dla Drupala
+Summary(pl.UTF-8):   Serwer XMLRPC dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
@@ -165,9 +165,9 @@ XMLRPC server for Drupal allows other Drupals authorize with your
 Drupal's user creditentials, this is called Distributed Authentication
 in Drupal world.
 
-%description xmlrpc -l pl
-Serwer XMLRPC dla Drupala pozwala innym Drupalom autoryzowaæ siê z
-danymi uwierzytelniaj±cymi u¿ytkownika danego Drupala - jest to
+%description xmlrpc -l pl.UTF-8
+Serwer XMLRPC dla Drupala pozwala innym Drupalom autoryzowaÄ‡ siÄ™ z
+danymi uwierzytelniajÄ…cymi uÅ¼ytkownika danego Drupala - jest to
 nazywane rozproszonym uwierzytelnianiem.
 
 %prep
