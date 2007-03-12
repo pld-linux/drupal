@@ -1,5 +1,5 @@
---- drupal/includes/bootstrap.inc~	2007-01-30 09:20:05.000000000 +0200
-+++ drupal/includes/bootstrap.inc	2007-03-12 11:29:22.377223778 +0200
+--- drupal/includes/bootstrap.inc	2007-03-12 11:29:22.377223778 +0200
++++ drupal/includes/bootstrap.inc	2007-03-12 12:19:17.196516132 +0200
 @@ -201,7 +201,7 @@
  
    $confdir = '/etc/webapps/drupal/sites';
@@ -27,6 +27,15 @@
      if ($dir = trim(dirname($_SERVER['PHP_SELF']), '\,/')) {
        $base_path = "/$dir";
        $base_url .= $base_path;
+@@ -798,7 +798,7 @@
+ 
+     case DRUPAL_BOOTSTRAP_ACCESS:
+       // Deny access to hosts which were banned - t() is not yet available.
+-      if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
++      if (drupal_is_denied('host', @$_SERVER['REMOTE_ADDR'])) {
+         header('HTTP/1.1 403 Forbidden');
+         print 'Sorry, '. $_SERVER['REMOTE_ADDR']. ' has been banned.';
+         exit();
 --- drupal-4.6.11/cron.php	2007-01-30 18:02:41.911795649 +0200
 +++ drupal-5.1/cron.php	2007-03-12 11:35:43.444806437 +0200
 @@ -1,3 +1,4 @@
