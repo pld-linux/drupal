@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl.UTF-8):   Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
 Version:	5.1
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/%{name}-%{version}.tar.gz
@@ -10,11 +10,12 @@ Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/%{name}-%{version}.tar.
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
-#Patch0:	%{name}-replication.patch
+Patch0:		%{name}-cron.patch
 Patch1:		%{name}-sitesdir.patch
 Patch2:		%{name}-topdir.patch
 Patch3:		%{name}-themedir2.patch
-#Patch4:	%{name}-emptypass.patch
+#Patchx:	%{name}-replication.patch
+#Patchx:	%{name}-emptypass.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
@@ -159,13 +160,13 @@ nazywane rozproszonym uwierzytelnianiem.
 
 %prep
 %setup -q %{?_rc:-n %{name}-%{version}-%{_rc}}
-#%patch0 -p1
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-#%patch4 -p1
 
-find -name '*~' | xargs -r rm -v
+# cleanup backups after patching
+find . '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
 cp -p %{SOURCE3} README.PLD
 
 %install
