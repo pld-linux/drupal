@@ -2,7 +2,7 @@ Summary:	Open source content management platform
 Summary(pl.UTF-8):   Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
 Version:	5.1
-Release:	0.2
+Release:	0.3
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/%{name}-%{version}.tar.gz
