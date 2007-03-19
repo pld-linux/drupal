@@ -4,7 +4,7 @@ Summary:	Open source content management platform
 Summary(pl.UTF-8):	Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -39,6 +39,7 @@ Requires:	php(xml)
 Requires:	webapps
 Requires:	webserver = apache
 Requires:	webserver(php) >= 4.3.3
+Provides:	%{name} = %{_ver}
 Obsoletes:	drupal-update
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
