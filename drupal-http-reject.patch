@@ -1,0 +1,16 @@
+--- drupal/modules/comment.module~	2007-09-12 11:15:08.000000000 +0300
++++ drupal/modules/comment.module	2007-09-12 11:15:01.000000000 +0300
+@@ -650,8 +650,11 @@
+           $edit['name'] = $user->name;
+         }
+ 
+-
+-        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['cid'], $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
++		if ($edit['name'] == '' && strpos($edit['comment'], 'http://') !== false) {
++			error_log("comments Got spammer: cid=$edit[cid] nid=$edit[nid] pid=$edit[pid] uid=$edit[uid] subject=$edit[subject] comment=$edit[comment]");
++		} else {
++        	db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['cid'], $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
++		}
+ 
+         _comment_update_node_statistics($edit['nid']);
+ 
