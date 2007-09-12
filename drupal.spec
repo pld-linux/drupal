@@ -1,10 +1,15 @@
+#
+# Conditional build:
+%bcond_with	ugly_patch		# enable ugly patch. don't use it ;)
+#
 %define		_ver		4.6
 %define		_patchlevel	11
+%define		_rel	4
 Summary:	Open source content management platform
 Summary(pl.UTF-8):	Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
 Version:	%{_ver}.%{_patchlevel}
-Release:	3
+Release:	%{_rel}%{?with_ugly_patch:p}
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
@@ -22,6 +27,8 @@ Patch6:		%{name}-19298-cache.patch
 Patch7:		%{name}-update-cli.patch
 Patch8:		%{name}-locale-memory.patch
 Patch9:		%{name}-comment.patch
+Patch10:	%{name}-disabled_fields.patch
+Patch11:	%{name}-http-reject.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
@@ -183,6 +190,8 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%{?with_ugly_patch:%patch10 -p1}
+%{?with_ugly_patch:%patch11 -p1}
 
 cp -p %{SOURCE3} README.PLD
 
