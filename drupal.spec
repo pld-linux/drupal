@@ -1,15 +1,16 @@
 Summary:	Open source content management platform
 Summary(pl.UTF-8):   Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
-Version:	5.1
-Release:	0.3
+Version:	5.7
+Release:	0.4
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	1b68368c650da73af5051bae163a8ed1
+# Source0-md5:	c7d9911ad1001c790bbdfe6fd4cdfc89
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
+Source4:	%{name}-apache1.conf
 Patch0:		%{name}-cron.patch
 Patch1:		%{name}-sitesdir.patch
 Patch2:		%{name}-topdir.patch
@@ -26,7 +27,6 @@ Requires:	apache(mod_dir)
 Requires:	apache(mod_expires)
 Requires:	apache(mod_rewrite)
 Requires:	php(mbstring)
-Requires:	php(mysql)
 Requires:	php(pcre)
 Requires:	php(xml)
 Requires:	webapps
@@ -172,54 +172,35 @@ cp -p %{SOURCE3} README.PLD
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,/var/{cache,lib}/%{name}} \
-	$RPM_BUILD_ROOT%{_appdir}/{po,database,modules/po,htdocs/modules}
+	$RPM_BUILD_ROOT%{_appdir}/{po,database,modules/po,htdocs/modules,themes}
 
 cp -a index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a install.php update.php xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 
 cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
-cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
 cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
+cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
+cp -a themes/* $RPM_BUILD_ROOT%{_appdir}/themes
+cp -Rl $RPM_BUILD_ROOT%{_appdir}/modules $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -Rl $RPM_BUILD_ROOT%{_appdir}/themes $RPM_BUILD_ROOT%{_appdir}/htdocs
+
+find $RPM_BUILD_ROOT%{_appdir}/htdocs/themes/ $RPM_BUILD_ROOT%{_appdir}/htdocs/modules/ \
+  -type f -regextype posix-awk \
+  -regex '.*\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|php|xtmpl)$|.*/(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$' \
+  -print0 | xargs -0 -r -l512 rm -f
+find $RPM_BUILD_ROOT%{_appdir}/themes/ $RPM_BUILD_ROOT%{_appdir}/modules/ \
+  -type f -regextype posix-awk \
+  ! -regex '.*\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|php|xtmpl)$|.*/(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$' \
+  -print0 | xargs -0 -r -l512 rm -f
+
 # avoid pulling perl dep
 chmod -x $RPM_BUILD_ROOT%{_appdir}/scripts/*
 
 ln -s /var/lib/%{name} $RPM_BUILD_ROOT%{_appdir}/files
-# needed for node.module for syndication icon
-ln -s htdocs/misc $RPM_BUILD_ROOT%{_appdir}
 
-# install themes
-install_theme() {
-set -x
-	local theme=$1
-	local appdir=$RPM_BUILD_ROOT%{_appdir}
-	local themedir=$appdir/htdocs/themes
-	local themedir_shadow=$appdir/themes
-
-	install -d $themedir/$theme
-	cp -a themes/$theme/*.* $themedir/$theme
-	if [ -f themes/$theme/*.theme ]; then
-		install -d $themedir_shadow/$theme
-		mv $themedir/$theme/*.theme $themedir_shadow/$theme
-		ln -s ../../htdocs/themes/$theme/screenshot.png $themedir_shadow/$theme
-	else
-		if [[ $theme = */* ]]; then
-			ln -s ../../htdocs/themes/$theme $themedir_shadow/$theme
-		else
-			ln -s ../htdocs/themes/$theme $themedir_shadow/$theme
-		fi
-	fi
-}
-
-install -d $RPM_BUILD_ROOT%{_appdir}/{themes,htdocs/themes}
-install_theme bluemarine
-install_theme chameleon
-install_theme chameleon/marvin
-install_theme pushbutton
-cp -a themes/engines $RPM_BUILD_ROOT%{_appdir}/themes
-
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
@@ -293,7 +274,6 @@ fi
 %{_appdir}/po
 # symlink
 %{_appdir}/files
-%{_appdir}/misc
 
 %dir %{_appdir}/htdocs
 %{_appdir}/htdocs/index.php
