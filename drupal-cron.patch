@@ -1,43 +1,6 @@
---- drupal/includes/bootstrap.inc	2007-03-12 11:29:22.377223778 +0200
-+++ drupal/includes/bootstrap.inc	2007-03-12 12:19:17.196516132 +0200
-@@ -201,7 +201,7 @@
- 
-   $confdir = '/etc/webapps/drupal/sites';
-   $uri = explode('/', $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_FILENAME']);
--  $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
-+  $server = explode('.', implode('.', array_reverse(explode(':', rtrim(@$_SERVER['HTTP_HOST'], '.')))));
-   for ($i = count($uri) - 1; $i > 0; $i--) {
-     for ($j = count($server); $j > 0; $j--) {
-       $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
-@@ -235,7 +235,7 @@
- function conf_init() {
-   global $db_url, $db_prefix, $base_url, $base_path, $base_root, $conf, $installed_profile;
-   $conf = array();
--  include_once './'. conf_path() .'/settings.php';
-+  include_once conf_path() .'/settings.php';
- 
-   if (isset($base_url)) {
-     // Parse fixed base URL from settings.php.
-@@ -250,7 +250,7 @@
-   else {
-     // Create base URL
-     $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
--    $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
-+    $base_url = $base_root .= '://'. @$_SERVER['HTTP_HOST'];
-     if ($dir = trim(dirname($_SERVER['PHP_SELF']), '\,/')) {
-       $base_path = "/$dir";
-       $base_url .= $base_path;
-@@ -798,7 +798,7 @@
- 
-     case DRUPAL_BOOTSTRAP_ACCESS:
-       // Deny access to hosts which were banned - t() is not yet available.
--      if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
-+      if (drupal_is_denied('host', @$_SERVER['REMOTE_ADDR'])) {
-         header('HTTP/1.1 403 Forbidden');
-         print 'Sorry, '. $_SERVER['REMOTE_ADDR']. ' has been banned.';
-         exit();
---- drupal-4.6.11/cron.php	2007-01-30 18:02:41.911795649 +0200
-+++ drupal-5.1/cron.php	2007-03-12 11:35:43.444806437 +0200
+diff -uNdr drupal-5.7.old/cron.php drupal-5.7/cron.php
+--- drupal-5.7.old/cron.php	2006-08-09 09:42:55.000000000 +0200
++++ drupal-5.7/cron.php	2008-02-16 15:50:48.000000000 +0100
 @@ -1,3 +1,4 @@
 +#!/usr/bin/php
  <?php
@@ -57,3 +20,42 @@
  include_once './includes/bootstrap.inc';
  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
  drupal_cron_run();
+diff -uNdr drupal-5.7.old/includes/bootstrap.inc drupal-5.7/includes/bootstrap.inc
+--- drupal-5.7.old/includes/bootstrap.inc	2008-01-10 23:14:24.000000000 +0100
++++ drupal-5.7/includes/bootstrap.inc	2008-02-16 16:02:23.000000000 +0100
+@@ -201,7 +201,7 @@
+ 
+   $confdir = 'sites';
+   $uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);
+-  $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
++  $server = explode('.', implode('.', array_reverse(explode(':', rtrim(@$_SERVER['HTTP_HOST'], '.')))));
+   for ($i = count($uri) - 1; $i > 0; $i--) {
+     for ($j = count($server); $j > 0; $j--) {
+       $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
+@@ -240,7 +240,7 @@
+   global $db_url, $db_prefix, $cookie_domain, $conf, $installed_profile;
+   $conf = array();
+ 
+-  include_once './'. conf_path() .'/settings.php';
++  include_once conf_path() .'/settings.php';
+ 
+   if (isset($base_url)) {
+     // Parse fixed base URL from settings.php.
+@@ -258,7 +258,7 @@
+ 
+     // As $_SERVER['HTTP_HOST'] is user input, ensure it only contains
+     // characters allowed in hostnames.
+-    $base_url = $base_root .= '://'. preg_replace('/[^a-z0-9-:._]/i', '', $_SERVER['HTTP_HOST']);
++    $base_url = $base_root .= '://'. preg_replace('/[^a-z0-9-:._]/i', '', @$_SERVER['HTTP_HOST']);
+ 
+     // $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
+     // be modified by a visitor.
+@@ -886,7 +886,7 @@
+ 
+     case DRUPAL_BOOTSTRAP_ACCESS:
+       // Deny access to hosts which were banned - t() is not yet available.
+-      if (drupal_is_denied('host', $_SERVER['REMOTE_ADDR'])) {
++      if (drupal_is_denied('host', @$_SERVER['REMOTE_ADDR'])) {
+         header('HTTP/1.1 403 Forbidden');
+         print 'Sorry, '. $_SERVER['REMOTE_ADDR']. ' has been banned.';
+         exit();
