@@ -18,3 +18,13 @@
  include_once './includes/bootstrap.inc';
  drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
  include_once './includes/xmlrpc.inc';
+--- drupal-5.7/update.php.old	2007-04-08 02:54:04.000000000 +0200
++++ drupal-5.7/update.php	2008-02-17 21:15:36.000000000 +0100
+@@ -765,6 +765,7 @@
+ // Our custom error handler is not yet installed, so we just suppress them.
+ ini_set('display_errors', FALSE);
+ 
++chdir('..');
+ include_once './includes/bootstrap.inc';
+ update_fix_system_table();
+ 
