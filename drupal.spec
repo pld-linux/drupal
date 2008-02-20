@@ -1,3 +1,5 @@
+# TODO
+# - why not drupal 6.0?
 Summary:	Open source content management platform
 Summary(pl.UTF-8):   Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
