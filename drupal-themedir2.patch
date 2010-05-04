@@ -1,11 +1,10 @@
---- ../includes/theme.inc	2005-05-20 16:55:04.000000000 +0300
-+++ /tmp/theme.inc	2005-05-21 15:10:45.000000000 +0300
-@@ -74,7 +74,7 @@
-   else {
+--- drupal-5.0/includes/theme.inc~	2007-01-26 13:09:14.801730081 +0200
++++ drupal-5.0/includes/theme.inc	2007-01-26 13:09:52.242575644 +0200
+@@ -65,6 +65,6 @@
      // File is a template/theme
      // Load its CSS, if it exists
 -    if (file_exists($stylesheet = dirname($themes[$theme]->filename) .'/style.css')) {
 +    if (file_exists('htdocs/' . ($stylesheet = dirname($themes[$theme]->filename) .'/style.css'))) {
-       theme_add_style($stylesheet);
+       drupal_add_css($stylesheet, 'theme');
      }
    }

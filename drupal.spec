@@ -1,53 +1,39 @@
-#
-# Conditional build:
-%bcond_with	ugly_patch		# enable ugly patch. don't use it ;)
-#
-%define		_ver		4.6
-%define		_patchlevel	11
-%define		_rel	4
+# TODO
+# - why not drupal 6.0?
 Summary:	Open source content management platform
-Summary(pl.UTF-8):	Platforma do zarządzania treścią o otwartych źródłach
+Summary(pl.UTF-8):   Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
-Version:	%{_ver}.%{_patchlevel}
-Release:	%{_rel}%{?with_ugly_patch:p}
+Version:	5.7
+Release:	0.4
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://drupal.org/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	cfa5777fb6a612addcee75dad132909e
+Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/%{name}-%{version}.tar.gz
+# Source0-md5:	c7d9911ad1001c790bbdfe6fd4cdfc89
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
-Patch0:		%{name}-replication.patch
+Source4:	%{name}-apache1.conf
+Patch0:		%{name}-cron.patch
 Patch1:		%{name}-sitesdir.patch
 Patch2:		%{name}-topdir.patch
 Patch3:		%{name}-themedir2.patch
-Patch4:		%{name}-emptypass.patch
-Patch5:		%{name}-cron.patch
-Patch6:		%{name}-19298-cache.patch
-Patch7:		%{name}-update-cli.patch
-Patch8:		%{name}-locale-memory.patch
-Patch9:		%{name}-comment.patch
-Patch10:	%{name}-disabled_fields.patch
-Patch11:	%{name}-http-reject.patch
+#Patchx:	%{name}-replication.patch
+#Patchx:	%{name}-emptypass.patch
 URL:		http://drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
 Requires:	%{name}(DB_Driver) = %{version}-%{release}
-Requires:	%{name}(theme) = %{_ver}
-Requires:	/usr/bin/php
 Requires:	apache(mod_access)
 Requires:	apache(mod_alias)
 Requires:	apache(mod_dir)
 Requires:	apache(mod_expires)
 Requires:	apache(mod_rewrite)
-Requires:	php(mysql)
+Requires:	php(mbstring)
 Requires:	php(pcre)
 Requires:	php(xml)
 Requires:	webapps
 Requires:	webserver = apache
 Requires:	webserver(php) >= 4.3.3
-Provides:	%{name} = %{_ver}
-Obsoletes:	drupal-update
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -104,10 +90,11 @@ i wiele więcej.
 
 %package cron
 Summary:	Drupal cron
-Summary(pl.UTF-8):	Usługa cron dla Drupala
+Summary(pl.UTF-8):   Usługa cron dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
+Requires:	php-cli >= 3:4.3.3
 
 %description cron
 This package contains script which invokes cron hooks for Drupal.
@@ -117,7 +104,7 @@ Ten pakiet zawiera skrypt wywołujący uchwyty crona dla Drupala.
 
 %package db-mysql
 Summary:	Drupal DB Driver for MySQL
-Summary(pl.UTF-8):	Sterownik bazy danych MySQL dla Drupala
+Summary(pl.UTF-8):   Sterownik bazy danych MySQL dla Drupala
 Group:		Applications/WWW
 Requires:	php(mysql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
@@ -130,7 +117,7 @@ Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla Drupala.
 
 %package db-pgsql
 Summary:	Drupal DB Driver for PostgreSQL
-Summary(pl.UTF-8):	Sterownik bazy danych PostgreSQL dla Drupala
+Summary(pl.UTF-8):   Sterownik bazy danych PostgreSQL dla Drupala
 Group:		Applications/WWW
 Requires:	php(pgsql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
@@ -149,22 +136,17 @@ UWAGA: Ten sterownik nie był testowany w PLD i nie wszystkie moduły
 mają schematy bazy danych dla PostgreSQL-a. Można go używać na własne
 ryzyko.
 
-%package themes
-Summary:	Themes distributed with Drupal
-Summary(pl.UTF-8):	Motywy rozprowadzane z Drupalem
+%package update
+Summary:	Package to perform Drupal database updates
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
-Provides:	drupal(theme) = %{_ver}
 
-%description themes
-This package contains themes distributed with Drupal.
-
-%description themes -l pl.UTF-8
-Ten pakiet zawiera motywy rozprowadzane z Drupalem.
+%description update
+This package contains scripts needed to do database updates via web.
 
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
-Summary(pl.UTF-8):	Serwer XMLRPC dla Drupala
+Summary(pl.UTF-8):   Serwer XMLRPC dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
@@ -179,61 +161,48 @@ danymi uwierzytelniającymi użytkownika danego Drupala - jest to
 nazywane rozproszonym uwierzytelnianiem.
 
 %prep
-%setup -q
+%setup -q %{?_rc:-n %{name}-%{version}-%{_rc}}
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p0
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%{?with_ugly_patch:%patch10 -p1}
-%{?with_ugly_patch:%patch11 -p1}
 
+# cleanup backups after patching
+find . '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
 cp -p %{SOURCE3} README.PLD
-
-# remove backups from patching as we use globs to package files to buildroot
-find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},/etc/cron.d,/var/{cache,lib}/%{name}} \
-	$RPM_BUILD_ROOT%{_appdir}/{po,database,modules/po,htdocs/modules}
+	$RPM_BUILD_ROOT%{_appdir}/{po,database,modules/po,htdocs/modules,themes}
 
-cp -a *.ico index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -a index.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 cp -a misc $RPM_BUILD_ROOT%{_appdir}/htdocs
-cp -a xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
-cp -a database/updates.inc $RPM_BUILD_ROOT%{_appdir}/database
+cp -a install.php update.php xmlrpc.php $RPM_BUILD_ROOT%{_appdir}/htdocs
 
-cp -a update.php $RPM_BUILD_ROOT%{_appdir}
-install cron.php $RPM_BUILD_ROOT%{_appdir}
-cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
+cp -a cron.php $RPM_BUILD_ROOT%{_appdir}
 cp -a includes scripts $RPM_BUILD_ROOT%{_appdir}
 cp -a sites $RPM_BUILD_ROOT%{_sysconfdir}
+cp -a modules/* $RPM_BUILD_ROOT%{_appdir}/modules
+cp -a themes/* $RPM_BUILD_ROOT%{_appdir}/themes
+cp -Rl $RPM_BUILD_ROOT%{_appdir}/modules $RPM_BUILD_ROOT%{_appdir}/htdocs
+cp -Rl $RPM_BUILD_ROOT%{_appdir}/themes $RPM_BUILD_ROOT%{_appdir}/htdocs
+
+find $RPM_BUILD_ROOT%{_appdir}/htdocs/themes/ $RPM_BUILD_ROOT%{_appdir}/htdocs/modules/ \
+  -type f -regextype posix-awk \
+  -regex '.*\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|php|xtmpl)$|.*/(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$' \
+  -print0 | xargs -0 -r -l512 rm -f
+find $RPM_BUILD_ROOT%{_appdir}/themes/ $RPM_BUILD_ROOT%{_appdir}/modules/ \
+  -type f -regextype posix-awk \
+  ! -regex '.*\.(engine|inc|info|install|module|profile|po|sh|.*sql|theme|php|xtmpl)$|.*/(code-style\.pl|Entries.*|Repository|Root|Tag|Template)$' \
+  -print0 | xargs -0 -r -l512 rm -f
+
+# avoid pulling perl dep
+chmod -x $RPM_BUILD_ROOT%{_appdir}/scripts/*
 
 ln -s /var/lib/%{name} $RPM_BUILD_ROOT%{_appdir}/files
-# needed for node.module for syndication icon
-ln -s htdocs/misc $RPM_BUILD_ROOT%{_appdir}
 
-# install themes
-cp -a themes $RPM_BUILD_ROOT%{_appdir}/htdocs
-# move .xtmpl/.theme out of htdocs
-(cd $RPM_BUILD_ROOT%{_appdir}/htdocs && tar cf - --remove-files themes/*/*.{xtmpl,theme}) | tar -xf - -C $RPM_BUILD_ROOT%{_appdir}
-mv $RPM_BUILD_ROOT%{_appdir}/{htdocs/,}themes/engines
-# make screenshot.png available in appdir
-for a in $RPM_BUILD_ROOT%{_appdir}/htdocs/themes/*; do
-	t=$(basename $a)
-	ln -s ../../htdocs/themes/$t/screenshot.png $RPM_BUILD_ROOT%{_appdir}/themes/$t
-done
-
-# a hack
-s=themes/chameleon/marvin
-ln -s ../../htdocs/$s $RPM_BUILD_ROOT%{_appdir}/$s
-
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
@@ -241,19 +210,22 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 rm -rf $RPM_BUILD_ROOT
 
 %post
-# Perform database updates
-echo 'Performing Drupal database updates'
-cd %{_appdir} && %{_bindir}/php update.php Update
-echo 'Done'
+if [ "$1" = 1 ]; then
+%banner -e %{name} <<'EOF'
+If this is your first install of Drupal, You need at least configure
+$db_url and $base_url in %{_sysconfdir}/sites/default/settings.php
+
+EOF
+fi
 
 %post db-mysql
 if [ "$1" = 1 ]; then
-%banner -e %{name}-db-mysql <<EOF
+%banner -e %{name}-db-mysql <<'EOF'
 If this is your first install of Drupal, you need to create Drupal database:
 
 mysqladmin create drupal
 zcat %{_docdir}/%{name}-db-mysql-%{version}/database.mysql.gz | mysql drupal
-mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON drupal.* TO 'drupal'@'localhost' IDENTIFIED BY 'PASSWORD'"
+mysql -e "GRANT SELECT, INSERT, UPDATE, DELETE ON drupal.* TO 'drupal'@'localhost' IDENTIFIED BY 'password'"
 mysql -e "GRANT CREATE TEMPORARY TABLES, LOCK TABLES ON *.* TO 'drupal'@'localhost'"
 
 EOF
@@ -261,7 +233,7 @@ fi
 
 %post db-pgsql
 if [ "$1" = 1 ]; then
-%banner -e %{name}-db-pgsql <<EOF
+%banner -e %{name}-db-pgsql <<'EOF'
 If this is your first install of Drupal, you need to create Drupal database:
 
 and import initial schema from
@@ -270,16 +242,16 @@ and import initial schema from
 EOF
 fi
 
-%triggerin -- apache1 < 1.3.37-3, apache1-base
+%triggerin -- apache1
 %webapp_register apache %{_webapp}
 
-%triggerun -- apache1 < 1.3.37-3, apache1-base
+%triggerun -- apache1
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache < 2.2.0, apache-base
+%triggerin -- apache >= 2.0.0
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache < 2.2.0, apache-base
+%triggerun -- apache >= 2.0.0
 %webapp_unregister httpd %{_webapp}
 
 %files
@@ -293,27 +265,23 @@ fi
 %attr(750,root,http) %dir %{_sysconfdir}/sites
 %attr(750,root,http) %dir %{_sysconfdir}/sites/default
 %attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sites/default/*
+%attr(750,root,http) %dir %{_sysconfdir}/sites/all
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/sites/all/*
 
 %dir %{_appdir}
-%{_appdir}/database
 %{_appdir}/includes
-%exclude %{_appdir}/includes/database.mysql.inc
-%exclude %{_appdir}/includes/database.pgsql.inc
 %{_appdir}/modules
 %{_appdir}/scripts
-%dir %{_appdir}/themes
-%dir %{_appdir}/themes/engines
+%{_appdir}/themes
 %{_appdir}/po
-%{_appdir}/update.php
-# symlinks
+# symlink
 %{_appdir}/files
-%{_appdir}/misc
 
 %dir %{_appdir}/htdocs
-%{_appdir}/htdocs/*.ico
 %{_appdir}/htdocs/index.php
+%{_appdir}/htdocs/install.php
 %{_appdir}/htdocs/misc
-%dir %{_appdir}/htdocs/themes
+%{_appdir}/htdocs/themes
 %{_appdir}/htdocs/modules
 
 %dir %attr(775,root,http) /var/lib/%{name}
@@ -322,24 +290,19 @@ fi
 %files cron
 %defattr(644,root,root,755)
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}
-%attr(755,root,root) %{_appdir}/cron.php
+%attr(775,root,root) %{_appdir}/cron.php
 
 %files db-mysql
 %defattr(644,root,root,755)
-%doc database/*.mysql
-%doc README.replication
-%{_appdir}/includes/database.mysql.inc
+#%doc README.replication
 
 %files db-pgsql
 %defattr(644,root,root,755)
-%doc database/*.pgsql
-%{_appdir}/includes/database.pgsql.inc
 
-%files themes
+%files update
 %defattr(644,root,root,755)
-%{_appdir}/themes/[!e]*
-%{_appdir}/themes/engines/*
-%{_appdir}/htdocs/themes/*
+%{_appdir}/htdocs/update.php
+%{_appdir}/database
 
 %files xmlrpc
 %defattr(644,root,root,755)

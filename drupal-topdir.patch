@@ -1,20 +1,30 @@
---- ./index.php~	2004-08-21 09:42:34.000000000 +0300
-+++ ./index.php	2005-05-20 14:10:24.260339523 +0300
+--- drupal-5.0/index.php~	2007-01-26 13:07:22.769199912 +0200
++++ drupal-5.0/index.php	2007-01-26 13:07:59.610031940 +0200
 @@ -9,6 +9,7 @@
   * prints the appropriate page.
   */
  
 +chdir('..');
- include_once 'includes/bootstrap.inc';
- drupal_page_header();
- include_once 'includes/common.inc';
---- drupal-4.6.2/xmlrpc.php~	2004-08-21 09:42:34.000000000 +0300
-+++ drupal-4.6.2/xmlrpc.php	2005-07-06 18:44:26.000000000 +0300
+ require_once './includes/bootstrap.inc';
+ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+ 
+--- drupal-5.0/xmlrpc.php~	2007-01-26 13:08:33.010786268 +0200
++++ drupal-5.0/xmlrpc.php	2007-01-26 13:08:53.461248124 +0200
 @@ -6,6 +6,7 @@
   * PHP page for handling incoming XML-RPC requests from clients.
   */
  
 +chdir('..');
- include_once 'includes/bootstrap.inc';
- include_once 'includes/common.inc';
- include_once 'includes/xmlrpc.inc';
+ include_once './includes/bootstrap.inc';
+ drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+ include_once './includes/xmlrpc.inc';
+--- drupal-5.7/update.php.old	2007-04-08 02:54:04.000000000 +0200
++++ drupal-5.7/update.php	2008-02-17 21:15:36.000000000 +0100
+@@ -765,6 +765,7 @@
+ // Our custom error handler is not yet installed, so we just suppress them.
+ ini_set('display_errors', FALSE);
+ 
++chdir('..');
+ include_once './includes/bootstrap.inc';
+ update_fix_system_table();
+ 
