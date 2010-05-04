@@ -12,7 +12,6 @@ Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/%{name}-%{version}.tar.
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
-Source4:	%{name}-apache1.conf
 Patch0:		%{name}-cron.patch
 Patch1:		%{name}-sitesdir.patch
 Patch2:		%{name}-topdir.patch
@@ -202,7 +201,7 @@ chmod -x $RPM_BUILD_ROOT%{_appdir}/scripts/*
 
 ln -s /var/lib/%{name} $RPM_BUILD_ROOT%{_appdir}/files
 
-install %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
