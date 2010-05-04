@@ -1,24 +1,21 @@
-# TODO
-# - why not drupal 6.0?
 Summary:	Open source content management platform
 Summary(pl.UTF-8):	Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
-Version:	5.7
-Release:	0.4
+Version:	6.16
+Release:	0.1
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://ftp.osuosl.org/pub/drupal/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	c7d9911ad1001c790bbdfe6fd4cdfc89
+Source0:	http://ftp.drupal.org/files/projects/%{name}-%{version}.tar.gz
+# Source0-md5:	bb27c1f90680b86df2c535b2d52e8021
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
 Patch0:		%{name}-cron.patch
 Patch1:		%{name}-sitesdir.patch
 Patch2:		%{name}-topdir.patch
-Patch3:		%{name}-themedir2.patch
 #Patchx:	%{name}-replication.patch
 #Patchx:	%{name}-emptypass.patch
-URL:		http://drupal.org/
+URL:		http://www.drupal.org/
 BuildRequires:	rpmbuild(macros) >= 1.264
 BuildRequires:	sed >= 4.0
 Requires:	%{name}(DB_Driver) = %{version}-%{release}
@@ -164,7 +161,6 @@ nazywane rozproszonym uwierzytelnianiem.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 # cleanup backups after patching
 find . '(' -name '*~' -o -name '*.orig' ')' -print0 | xargs -0 -r -l512 rm -f
