@@ -1,7 +1,7 @@
 # TODO
 # - why not drupal 6.0?
 Summary:	Open source content management platform
-Summary(pl.UTF-8):   Platforma do zarządzania treścią o otwartych źródłach
+Summary(pl.UTF-8):	Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
 Version:	5.7
 Release:	0.4
@@ -90,7 +90,7 @@ i wiele więcej.
 
 %package cron
 Summary:	Drupal cron
-Summary(pl.UTF-8):   Usługa cron dla Drupala
+Summary(pl.UTF-8):	Usługa cron dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 Requires:	crondaemon
@@ -104,7 +104,7 @@ Ten pakiet zawiera skrypt wywołujący uchwyty crona dla Drupala.
 
 %package db-mysql
 Summary:	Drupal DB Driver for MySQL
-Summary(pl.UTF-8):   Sterownik bazy danych MySQL dla Drupala
+Summary(pl.UTF-8):	Sterownik bazy danych MySQL dla Drupala
 Group:		Applications/WWW
 Requires:	php(mysql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
@@ -117,7 +117,7 @@ Ten wirtualny pakiet dostarcza backend bazy danych MySQL dla Drupala.
 
 %package db-pgsql
 Summary:	Drupal DB Driver for PostgreSQL
-Summary(pl.UTF-8):   Sterownik bazy danych PostgreSQL dla Drupala
+Summary(pl.UTF-8):	Sterownik bazy danych PostgreSQL dla Drupala
 Group:		Applications/WWW
 Requires:	php(pgsql)
 Provides:	%{name}(DB_Driver) = %{version}-%{release}
@@ -146,7 +146,7 @@ This package contains scripts needed to do database updates via web.
 
 %package xmlrpc
 Summary:	XMLRPC server for Drupal
-Summary(pl.UTF-8):   Serwer XMLRPC dla Drupala
+Summary(pl.UTF-8):	Serwer XMLRPC dla Drupala
 Group:		Applications/WWW
 Requires:	%{name} = %{version}-%{release}
 
@@ -242,16 +242,16 @@ and import initial schema from
 EOF
 fi
 
-%triggerin -- apache1
+%triggerin -- apache1 < 1.3.37-3, apache1-base
 %webapp_register apache %{_webapp}
 
-%triggerun -- apache1
+%triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache >= 2.0.0
+%triggerin -- apache < 2.2.0, apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache >= 2.0.0
+%triggerun -- apache < 2.2.0, apache-base
 %webapp_unregister httpd %{_webapp}
 
 %files
