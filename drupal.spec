@@ -1,12 +1,12 @@
 Summary:	Open source content management platform
 Summary(pl.UTF-8):	Platforma do zarządzania treścią o otwartych źródłach
 Name:		drupal
-Version:	6.16
+Version:	6.20
 Release:	0.1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://ftp.drupal.org/files/projects/%{name}-%{version}.tar.gz
-# Source0-md5:	bb27c1f90680b86df2c535b2d52e8021
+# Source0-md5:	a4f59401fbb3e20e3a03ac5fc11bd27c
 Source1:	%{name}.conf
 Source2:	%{name}.cron
 Source3:	%{name}.PLD
